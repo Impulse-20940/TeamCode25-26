@@ -58,7 +58,6 @@ public class Robot{
         this.L = L;
     }
     public void get_members() {//и это!
-        //инициализация всех используемых устройств
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         klesh = hardwareMap.get(Servo.class, "kl");
         klesh1 = hardwareMap.get(Servo.class, "kl1");
