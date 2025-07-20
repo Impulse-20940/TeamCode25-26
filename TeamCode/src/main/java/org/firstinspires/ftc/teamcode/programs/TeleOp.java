@@ -16,11 +16,11 @@ import org.firstinspires.ftc.teamcode.opmodes.superTeleOp;
 public class TeleOp extends LinearOpMode {
     public void runOpMode() {
         Robot R = new Robot();
-        R.get_members();
         superTeleOp tel = new superTeleOp();
         IMU gyro = new IMU();
         tel.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, this);
         R.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, this);
+        R.get_members();
         gyro.calibrate_imu(R.imu);
 
         waitForStart();
