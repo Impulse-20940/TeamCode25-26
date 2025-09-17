@@ -18,6 +18,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 public class Camera {
+    IMU gyro;
+    Cannon cannon;
+    Wheelbase wb;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;
@@ -81,11 +84,15 @@ public class Camera {
 
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
+                             IMU Imu, Cannon cnn, Wheelbase wheel,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+        this.gyro = Imu;
+        this.cannon = cnn;
+        this.wb = wheel;
         this.L = L;
     }
     public void init(VisionPortal visionPortal, AprilTagProcessor aprilTag){

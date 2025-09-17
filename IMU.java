@@ -14,6 +14,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class IMU {
+    Cannon cannon;
+    Camera camera;
+    Wheelbase wb;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;
@@ -22,12 +25,17 @@ public class IMU {
     private BNO055IMU imu;
     Robot R = new Robot();
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
+                             Cannon cnn,
+                             Camera cam, Wheelbase wheel,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.L = L;
+        this.cannon = cnn;
+        this.camera = cam;
+        this.wb = wheel;
     }
     public void init(BNO055IMU Imu){
         this.imu = Imu;
