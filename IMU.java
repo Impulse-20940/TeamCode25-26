@@ -25,19 +25,13 @@ public class IMU {
     private BNO055IMU imu;
     Robot R = new Robot();
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             Cannon cnn,
-                             Camera cam, Wheelbase wheel,
+                             BNO055IMU Imu,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.L = L;
-        this.cannon = cnn;
-        this.camera = cam;
-        this.wb = wheel;
-    }
-    public void init(BNO055IMU Imu){
         this.imu = Imu;
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -55,6 +49,12 @@ public class IMU {
         }
         telemetry.addData("Done!", "Calibrated"); //Сообщение об окончании калибровки
         telemetry.update();
+    }
+    public void init(Cannon cnn,
+                     Camera cam, Wheelbase wheel){
+        this.cannon = cnn;
+        this.camera = cam;
+        this.wb = wheel;
     }
     public double getTurnAngle() {
         //получить текущий угол поворота

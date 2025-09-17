@@ -19,19 +19,19 @@ public class Cannon {
     DcMotor cnn;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             IMU Imu, Camera cam, Wheelbase wheel,
+                             DcMotor cannon,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+        this.L = L;
+        this.cnn = cannon;
+        cnn = hardwareMap.get(DcMotor.class, "cnn");
+    }
+    public void init(IMU Imu, Camera cam, Wheelbase wheel){
         this.gyro = Imu;
         this.camera = cam;
         this.wb = wheel;
-        this.L = L;
-    }
-    public void init(DcMotor cannon){
-        this.cnn = cannon;
-        cnn = hardwareMap.get(DcMotor.class, "cnn");
     }
 }

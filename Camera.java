@@ -84,20 +84,20 @@ public class Camera {
 
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             IMU Imu, Cannon cnn, Wheelbase wheel,
+                             VisionPortal visionPortal, AprilTagProcessor aprilTag,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        this.gyro = Imu;
-        this.cannon = cnn;
-        this.wb = wheel;
         this.L = L;
-    }
-    public void init(VisionPortal visionPortal, AprilTagProcessor aprilTag){
         this.visionPortal = visionPortal;
         this.aprilTag = aprilTag;
         initAprilTag();
+    }
+    public void init(IMU Imu, Cannon cnn, Wheelbase wheel){
+        this.gyro = Imu;
+        this.cannon = cnn;
+        this.wb = wheel;
     }
 }

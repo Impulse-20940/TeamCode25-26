@@ -25,26 +25,27 @@ public class Wheelbase {
     DcMotor lf;
     DcMotor lb;
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             IMU Imu, Cannon cnn,
-                             Camera cam, LinearOpMode L){
+                             DcMotor RF, DcMotor RB, DcMotor LF, DcMotor LB,
+                             LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        this.gyro = Imu;
-        this.cannon = cnn;
-        this.camera = cam;
-        this.L = L;
-    }
-    public void init(DcMotor RF, DcMotor RB, DcMotor LF, DcMotor LB){
         this.rf = RF;
         this.rb = RB;
         this.lf = LF;
         this.lb = LB;
+        this.L = L;
         rf = hardwareMap.get(DcMotor.class, "rf");
         rb = hardwareMap.get(DcMotor.class, "rb");
         lf = hardwareMap.get(DcMotor.class, "lf");
         lb = hardwareMap.get(DcMotor.class, "lb");
+    }
+    public void init(IMU Imu, Cannon cnn,
+                     Camera cam){
+        this.gyro = Imu;
+        this.cannon = cnn;
+        this.camera = cam;
     }
     public void stable(double stable, long time, double kt){
         runtime.reset();
