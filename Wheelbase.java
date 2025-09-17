@@ -49,7 +49,7 @@ public class Wheelbase {
     public void stable(double stable, long time, double kt){
         runtime.reset();
         while(L.opModeIsActive() && runtime.seconds() < time){
-            double getangle = stable-imu.getTurnAngle();
+            double getangle = stable-gyro.getTurnAngle();
             double axial = 0;
             double lateral = getangle*kt;
             double yaw = 0;
@@ -70,12 +70,10 @@ public class Wheelbase {
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    public void setMPower(double rb, double rf, double lf, double lb){
-        //подача напряжения на моторы
-        get_members();//Устоновить мощность на моторы
-        rightFrontDrive.setPower(rf);
-        leftFrontDrive.setPower(lf);
-        rightBackDrive.setPower(rb);
-        leftBackDrive.setPower(lb);
+    public void setMPower(double RB, double RF, double LF, double LB){
+        rf.setPower(RF);
+        lf.setPower(LF);
+        rb.setPower(RB);
+        lb.setPower(LB);
     }
 }
