@@ -19,8 +19,11 @@ public class TeleOp extends LinearOpMode {
         Wheelbase wheel = new Wheelbase();
         R.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, imu, cannon, cam, wheel, this);
+        waitForStart();
         while(opModeIsActive()){
-            imu.getTurnAngle();
+            cam.set_processor();
+            cam.telemetryAprilTag();
+            cam.stop_stream();
         }
     }
 }

@@ -54,7 +54,14 @@ public class Camera {
         visionPortal = builder.build();
 
     }
-    private void telemetryAprilTag() {
+    public void set_processor(){
+        visionPortal.setProcessorEnabled(aprilTag, true);
+    }
+    public void stop_stream(){
+        visionPortal.setProcessorEnabled(aprilTag, false);
+        visionPortal.close();
+    }
+    public void telemetryAprilTag() {
 
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
