@@ -15,13 +15,26 @@ public class RobotBuild extends Robot{
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.L = L;
-        Imu.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, this.imu, L);
-        //cnn.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, this.cannon, L);
-        cam.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, this.visionPortal, this.aprilTag, L);
-        //wheel.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, this.rf, this.rb, this.lf, this.lb, L);
-        Imu.init(cnn, cam, wheel);
-        cnn.init(Imu, cam, wheel);
-        cam.init(Imu, cnn, wheel);
-        wheel.init(Imu, cnn, cam);
+        if (Imu != null){
+            Imu.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.imu, L);
+            Imu.init(cnn, cam, wheel);
+        }
+        if (cnn != null){
+            cnn.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.cannon, L);
+            cnn.init(Imu, cam, wheel);
+        }
+        if (cam != null){
+            cam.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.visionPortal, this.aprilTag, L);
+            cam.init(Imu, cnn, wheel);
+        }
+
+        if (wheel != null){
+            wheel.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.rf, this.rb, this.lf, this.lb, L);
+            wheel.init(Imu, cnn, cam);
+        }
     }
 }
