@@ -29,9 +29,4 @@ public class Cannon {
         this.cnn = cannon;
         cnn = hardwareMap.get(DcMotor.class, "cnn");
     }
-    public void init(IMU Imu, Camera cam, Wheelbase wheel){
-        this.gyro = Imu;
-        this.camera = cam;
-        this.wb = wheel;
-    }
 }

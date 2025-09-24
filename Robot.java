@@ -24,6 +24,10 @@ public class Robot {
     public BNO055IMU imu;
     public VisionPortal visionPortal;
     public AprilTagProcessor aprilTag;
+    IMU Imu;
+    Wheelbase wb;
+    Cannon cnn;
+    Camera cam;
     public void delay(long millis){
         try{
             Thread.sleep(millis);

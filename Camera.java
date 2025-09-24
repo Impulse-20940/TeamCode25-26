@@ -26,10 +26,10 @@ public class Camera {
     Gamepad gamepad1;
     Gamepad gamepad2;
     LinearOpMode L;
-    private static final boolean USE_WEBCAM = true;
-    private Position cameraPosition = new Position(DistanceUnit.INCH,
+    public static final boolean USE_WEBCAM = false;
+    private final Position cameraPosition = new Position(DistanceUnit.INCH,
             0, 0, 0, 0);
-    private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
+    private final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
             0, -90, 0, 0);
 
     AprilTagProcessor aprilTag;
@@ -101,10 +101,5 @@ public class Camera {
         this.visionPortal = visionPortal;
         this.aprilTag = aprilTag;
         initAprilTag();
-    }
-    public void init(IMU Imu, Cannon cnn, Wheelbase wheel){
-        this.gyro = Imu;
-        this.cannon = cnn;
-        this.wb = wheel;
     }
 }

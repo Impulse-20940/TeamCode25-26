@@ -50,12 +50,6 @@ public class IMU {
         telemetry.addData("Done!", "Calibrated"); //Сообщение об окончании калибровки
         telemetry.update();
     }
-    public void init(Cannon cnn,
-                     Camera cam, Wheelbase wheel){
-        this.cannon = cnn;
-        this.camera = cam;
-        this.wb = wheel;
-    }
     public double getTurnAngle() {
         //получить текущий угол поворота
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);

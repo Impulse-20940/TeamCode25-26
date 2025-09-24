@@ -41,12 +41,6 @@ public class Wheelbase {
         lf = hardwareMap.get(DcMotor.class, "lf");
         lb = hardwareMap.get(DcMotor.class, "lb");
     }
-    public void init(IMU Imu, Cannon cnn,
-                     Camera cam){
-        this.gyro = Imu;
-        this.cannon = cnn;
-        this.camera = cam;
-    }
     public void stable(double stable, long time, double kt){
         runtime.reset();
         while(L.opModeIsActive() && runtime.seconds() < time){
