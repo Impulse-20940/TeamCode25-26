@@ -18,9 +18,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 public class Camera {
-    IMU gyro;
-    Cannon cannon;
-    Wheelbase wb;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;

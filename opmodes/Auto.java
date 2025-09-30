@@ -19,6 +19,8 @@ public class Auto extends LinearOpMode {
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         R.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, cannon, cam, wheel, this);
+                gamepad2, imu, null, null, wheel, this);
+        waitForStart();
+        R.stable(45, 1, 45, 1000, 0.012);
     }
 }

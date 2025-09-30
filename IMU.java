@@ -14,9 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class IMU {
-    Cannon cannon;
-    Camera camera;
-    Wheelbase wb;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;
@@ -55,5 +52,8 @@ public class IMU {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         Acceleration gravity = imu.getGravity();
         return angles.firstAngle;
+    }
+    public double get_st_err(double stable, double kt){
+        return (stable-getTurnAngle())*kt;
     }
 }

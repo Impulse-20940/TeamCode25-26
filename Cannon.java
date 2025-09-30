@@ -2,15 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Cannon {
-    IMU gyro;
-    Camera camera;
-    Wheelbase wb;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;
@@ -31,9 +29,10 @@ public class Cannon {
         this.c2 = C2;
         c1 = hardwareMap.get(DcMotor.class, "c1");
         c2 = hardwareMap.get(DcMotor.class, "c2");
+        c2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void cannon_control(double power){
         c1.setPower(power);
-        c2.setPower(-power);
+        c2.setPower(power);
     }
 }

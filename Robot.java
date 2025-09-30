@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -16,6 +17,7 @@ public class Robot {
     public Gamepad gamepad1;
     public Gamepad gamepad2;
     public LinearOpMode L;
+    public ElapsedTime runtime;
     public DcMotor rf;
     public DcMotor rb;
     public DcMotor lf;

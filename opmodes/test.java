@@ -20,7 +20,8 @@ public class test extends LinearOpMode {
             double stick = gamepad1.left_stick_y;
             cnn.cannon_control(stick);
             telemetry.addData("Stick is", "%4f", stick);
-            telemetry.addData("Motor is", "%4f %4f", cnn.c1.getPower(), cnn.c2.getPower());
+            telemetry.addData("Motor is", "%4f %4f", cnn.c1.getPower(),
+                                                                    cnn.c2.getPower());
             telemetry.update();
         }
     }
