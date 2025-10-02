@@ -42,7 +42,7 @@ public class TeleOp extends LinearOpMode {
             if(st90){
                 axial = -gamepad1.left_stick_x;
                 lateral = -gamepad1.left_stick_y;
-                yaw = imu.get_st_err(90, 0.012);
+                yaw = imu.get_st_err(-90, 0.012);
             } else {
                 axial = gamepad1.left_stick_y;
                 lateral = -gamepad1.left_stick_x;
