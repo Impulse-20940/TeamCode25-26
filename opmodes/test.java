@@ -15,7 +15,7 @@ public class test extends LinearOpMode {
         Cannon cnn = new Cannon();
         r.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, null, cnn, null, null, this);
-        waitForStart();
+        waitForStart();//StartProgramm
         while(opModeIsActive()){
             double stick = gamepad1.left_stick_y;
             cnn.cannon_control(stick);
