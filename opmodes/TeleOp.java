@@ -35,18 +35,19 @@ public class TeleOp extends LinearOpMode {
         while(opModeIsActive()){
             //cam.telemetryAprilTag();
             boolean btn_b = gamepad1.b;
+            double rate = 1 - gamepad1.right_trigger;
             if(btn_b){
                 if(flag) st90 = !st90;
                 flag = false;
             } else flag = true;
             if(st90){
-                axial = -gamepad1.left_stick_x;
-                lateral = -gamepad1.left_stick_y;
+                axial = -gamepad1.left_stick_x*rate;
+                lateral = -gamepad1.left_stick_y*rate;
                 yaw = imu.get_st_err(-90, 0.012);
             } else {
-                axial = gamepad1.left_stick_y;
-                lateral = -gamepad1.left_stick_x;
-                yaw = -gamepad1.right_stick_x;
+                axial = gamepad1.left_stick_y*rate;
+                lateral = -gamepad1.left_stick_x*rate;
+                yaw = -gamepad1.right_stick_x*rate;
             }
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;

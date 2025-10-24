@@ -13,16 +13,17 @@ public class test extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
         Cannon cnn = new Cannon();
+        Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, null, cnn, null, null, this);
+                gamepad2, null, cnn, null, wheel, this);
         waitForStart();//StartProgramm
         while(opModeIsActive()){
-            double stick = gamepad1.left_stick_y;
-            cnn.cannon_control(stick);
-            telemetry.addData("Stick is", "%4f", stick);
-            telemetry.addData("Motor is", "%4f %4f", cnn.c1.getPower(),
-                                                                    cnn.c2.getPower());
-            telemetry.update();
+            while(gamepad1.dpad_left){
+                r.delay(1);
+                wheel.setMPower(0.5, -0.5, 0.5, -0.5);
+            }
+            wheel.setMPower(0, 0, 0, 0);
+            wheel.setZPB();
         }
     }
 }
