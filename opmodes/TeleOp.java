@@ -29,11 +29,11 @@ public class TeleOp extends LinearOpMode {
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, null, wheel, this);
-        //cam.set_processor();
+                gamepad2, imu, null, cam, wheel, this);
+        cam.set_processor();
         waitForStart();
         while(opModeIsActive()){
-            //cam.telemetryAprilTag();
+            cam.telemetryAprilTag();
             boolean btn_b = gamepad1.b;
             double rate = 1 - gamepad1.right_trigger;
             if(btn_b){
@@ -57,6 +57,6 @@ public class TeleOp extends LinearOpMode {
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
         }
-        //cam.stop_stream();
+        cam.stop_stream();
     }
 }
