@@ -43,10 +43,9 @@ public class RobotBuild extends Robot{
     public void stable(double a, double l, double stable, long time, double kt){
         runtime.reset();
         while(L.opModeIsActive() && runtime.milliseconds() < time){
-            double getangle = stable-Imu.getTurnAngle();
             double axial = a;
             double lateral = l;
-            double yaw = getangle*kt;
+            double yaw = Imu.get_st_err(stable, kt);
 
             double lfp  = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;
