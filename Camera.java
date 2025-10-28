@@ -23,7 +23,7 @@ public class Camera {
     Gamepad gamepad1;
     Gamepad gamepad2;
     LinearOpMode L;
-    public static final boolean USE_WEBCAM = false;
+    public static final boolean USE_WEBCAM = true;
     private final Position cameraPosition = new Position(DistanceUnit.INCH,
             0, 0, 0, 0);
     private final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
@@ -42,7 +42,7 @@ public class Camera {
         VisionPortal.Builder builder = new VisionPortal.Builder();
 
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "cam"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
@@ -59,10 +59,8 @@ public class Camera {
         visionPortal.close();
     }
     public void telemetryAprilTag() {
-
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
-
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
@@ -76,16 +74,43 @@ public class Camera {
                             detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
                             detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
                             detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)));
+                    telemetry.update();
                 }
             } else {
                 telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
                 telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+                telemetry.update();
             }
         }
 
         telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-
+        telemetry.update();
+    }
+    double[] get_position() {
+        double x = 0, y = 0, z = 0;
+        double p = 0, r = 0, yaw = 0;
+        double id = 0;
+        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                // Only use tags that don't have Obelisk in them
+                if (!detection.metadata.name.contains("Obelisk")) {
+                    x = detection.robotPose.getPosition().x;
+                    y = detection.robotPose.getPosition().y;
+                    z = detection.robotPose.getPosition().z;
+                    p = detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES);
+                    r = detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES);
+                    yaw = detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
+                    id = detection.id;
+                }
+            } else {
+                id = detection.id;
+            }
+        }
+        double[] pos = new double[]{x, y, z, p, r, yaw, id};
+        return pos;
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              VisionPortal visionPortal, AprilTagProcessor aprilTag,
