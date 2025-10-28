@@ -23,6 +23,8 @@ public class test extends LinearOpMode {
     double axial;
     double lateral;
     double yaw;
+    double speed = 10;
+
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -38,39 +40,29 @@ public class test extends LinearOpMode {
             //cam.telemetryAprilTag();
             //Нажата кнопка B - стабилизация 90 грд
 
-            if(gamepad1.a){
-                if(flag) turn90 = !turn90;
-                flag = false;
-            } else flag = true;
-
-            boolean btn_b = gamepad1.b;
-            if(btn_b){
-                if(flag) st90 = !st90;
-                flag = false;
-            } else flag = true;
-            // Проверка стабизизации
-            if(st90){
-                axial = -gamepad1.left_stick_x;
-                lateral = -gamepad1.left_stick_y;
-                yaw = imu.get_st_err(-90, 0.012);
-            } else {
-                axial = gamepad1.left_stick_y;
-                lateral = -gamepad1.left_stick_x;
-                yaw = -gamepad1.right_stick_x;
+            if(gamepad1.left_bumper){
+                while (gamepad1.left_bumper){}
+                speed = 4;
+                }
+            if(gamepad1.right_bumper){
+                while (gamepad1.left_bumper){}
+                speed = 1;
+                }
             }
+            axial = gamepad1.left_stick_y;
+            lateral = -gamepad1.left_stick_x;
+            yaw = -gamepad1.right_stick_x;
             // Базовое управление колёсной базой
-            double lfp = axial + lateral + yaw;
-            double rfp = axial - lateral - yaw;
-            double lbp = axial - lateral + yaw;
-            double rbp = axial + lateral - yaw;
+            double lfp = (axial + lateral + yaw) * speed;
+            double rfp = (axial - lateral - yaw) * speed;
+            double lbp = (axial - lateral + yaw) * speed;
+            double rbp = (axial + lateral - yaw) * speed;
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
 
-            r.lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            r.lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
         }
         //cam.stop_stream();
-}
+
 
