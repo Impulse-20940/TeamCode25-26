@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Camera;
 import org.firstinspires.ftc.teamcode.Cannon;
 import org.firstinspires.ftc.teamcode.IMU;
@@ -13,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 @Config
 @Autonomous(name = "xy-moving")
 public class Auto extends LinearOpMode {
+    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
     double axial;
     double lateral;
     double yaw;
@@ -29,13 +32,23 @@ public class Auto extends LinearOpMode {
         IMU imu = new IMU();
         r.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, imu, null, cam, wheel, this);
+
+        wheel.reset_encoders();
+
         waitForStart();
-        double sx = x1 - x;
-        double sy = y1 - y;
+
+        double tic_per_cm = 31.4/480;
+        double x1_1 = x1 / tic_per_cm;
+        double x_1 = x / tic_per_cm;
+        double y1_1 = y1 / tic_per_cm;
+        double y_1 = y / tic_per_cm;
+
+        double sx = x1_1 - x_1;
+        double sy = y1_1 - y_1;
 
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
-        while(r.lf.getCurrentPosition() < s && opModeIsActive()) {
+        while(wheel.get_enc_pos() < s && opModeIsActive()) {
             axial = sy/s;
             lateral = sx/s;
             yaw = imu.get_st_err(0, 0.012);
@@ -46,6 +59,9 @@ public class Auto extends LinearOpMode {
             double rbp  = axial + lateral - yaw;
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
+
+            telemetry.addData("Now is (tics):", "%4f", wheel.get_enc_pos());
+            telemetry.update();
         }
     }
 }

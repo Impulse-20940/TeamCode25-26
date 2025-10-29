@@ -41,11 +41,9 @@ public class Wheelbase {
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-    public void reset_encoders(DcMotor[] motors){
-        for (DcMotor motor : motors){
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+    public void reset_encoders(){
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     public void setMPower(double RB, double RF, double LF, double LB){
         rf.setPower(RF);
@@ -58,5 +56,8 @@ public class Wheelbase {
         lb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rf.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    public double get_enc_pos(){
+        return lf.getCurrentPosition();
     }
 }
