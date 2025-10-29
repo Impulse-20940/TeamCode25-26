@@ -21,6 +21,6 @@ public class Auto extends LinearOpMode {
         R.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, imu, null, null, wheel, this);
         waitForStart();
-        R.stable(45, 1, 45, 1000, 0.012);
+
     }
 }
