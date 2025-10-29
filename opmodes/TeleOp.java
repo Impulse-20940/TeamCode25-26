@@ -26,14 +26,14 @@ public class TeleOp extends LinearOpMode {
         RobotBuild r = new RobotBuild();
         IMU imu = new IMU();
         //Cannon cannon = new Cannon();
-        //Camera cam = new Camera();
+        Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, null, wheel, this);
+                gamepad2, imu, null, cam, wheel, this);
         //cam.set_processor();
         waitForStart();
         while(opModeIsActive()){
-            //cam.telemetryAprilTag();
+            cam.telemetryAprilTag();
             //Нажата кнопка B - стабилизация 90 грд
             boolean btn_b = gamepad1.b;
             if(btn_b){
@@ -58,6 +58,6 @@ public class TeleOp extends LinearOpMode {
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
         }
-        //cam.stop_stream();
+        cam.stop_stream();
     }
 }
