@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -9,47 +8,20 @@ import org.firstinspires.ftc.teamcode.Cannon;
 import org.firstinspires.ftc.teamcode.IMU;
 import org.firstinspires.ftc.teamcode.RobotBuild;
 import org.firstinspires.ftc.teamcode.Wheelbase;
-@Config
-@Autonomous(name = "test_moving")
+@Autonomous
 public class test_auto extends LinearOpMode {
-    boolean st90;
-    boolean flag;
-    double axial;
-    double lateral;
-    double yaw;
-    public static double x;
-    public static double y;
-
-    public static double x1;
-    public static double y1;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotBuild r = new RobotBuild();
+        RobotBuild R = new RobotBuild();
+        IMU imu = new IMU();
+        Cannon cannon = new Cannon();
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
-        IMU imu = new IMU();
-        r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, cam, wheel, this);
+        R.init(hardwareMap, telemetry, gamepad1,
+                gamepad2, imu, null, null, wheel, this);
         waitForStart();
-        while(opModeIsActive()){
-            double sx = x1 - x;
-            double sy = y1 - y;
+        R.delay(1500);
+        R.turn(-120, 1000);
 
-            double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
-
-            while(r.lf.getCurrentPosition() < s && opModeIsActive()) {
-                axial = sy/s;
-                lateral = sx/s;
-                yaw = imu.get_st_err(0, 0.012);
-
-                double lfp  = axial + lateral + yaw;
-                double rfp = axial - lateral - yaw;
-                double lbp   = axial - lateral + yaw;
-                double rbp  = axial + lateral - yaw;
-
-                wheel.setMPower(rbp, rfp, lfp, lbp);
-            }
-        }
     }
 }
