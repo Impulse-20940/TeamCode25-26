@@ -84,18 +84,21 @@ public class RobotBuild extends Robot {
         wb.setZPB();
     }
 
-    public void turn(double grd) {
+    public void turn(double grd, double kt) {
         double yaw;
         runtime.reset();
         while (L.opModeIsActive() && runtime.milliseconds() < 1000) {
         //Вычисление угла стабилизации
-        yaw = Imu.get_st_err(grd, 0.012);
+        yaw = Imu.get_st_err(grd, kt);
         //Вычисление мощности
         double lfp = (+yaw);
         double rfp = (-yaw);
         double lbp = (+yaw);
         double rbp = (-yaw);
         wb.setMPower(rbp, rfp, lfp, lbp);
+        double grd_tel = Imu.getTurnAngle();
+        telemetry.addData("Now is (degrees):", "%4f", grd_tel);
+        telemetry.update();
     }
         wb.setZPB();
     }

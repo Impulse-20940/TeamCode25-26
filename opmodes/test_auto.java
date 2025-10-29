@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Camera;
 import org.firstinspires.ftc.teamcode.Cannon;
@@ -15,11 +14,13 @@ public class test_auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         RobotBuild R = new RobotBuild();
         IMU imu = new IMU();
+        Cannon cannon = new Cannon();
+        Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         R.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, imu, null, null, wheel, this);
-        wheel.reset_encoders();
         waitForStart();
-        R.turn(90);
+        R.delay(1500);
+        R.turn(45, 0.0069);
     }
 }
