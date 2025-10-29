@@ -21,7 +21,6 @@ public class test_auto extends LinearOpMode {
                 gamepad2, imu, null, null, wheel, this);
         waitForStart();
         R.delay(1500);
-        R.turn(-120, 1000);
-
+        R.turn(45);
     }
 }
