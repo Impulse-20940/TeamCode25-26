@@ -95,39 +95,42 @@ public class RobotBuild extends Robot {
             double rfp = (-yaw);
             double lbp = (+yaw);
             double rbp = (-yaw);
-            wb.setMPower(rbp, rfp, lfp, lbp);
             double grd_tel = Imu.getTurnAngle();
+
+            wb.setMPower(rbp, rfp, lfp, lbp);
             telemetry.addData("Now is (degrees):", "%4f", grd_tel);
             telemetry.update();
         }
         wb.setZPB();
     }
 
-    public void move_xy(double x, double x1, double y, double y1){
+    public void move_xy(double x, double x1, double y, double y1, double angle, double kt){
         double tic_per_cm = 31.4/480;
         double x1_1 = x1 / tic_per_cm;
-        double x_1 = x / tic_per_cm;
+        double x_1  = x / tic_per_cm;
         double y1_1 = y1 / tic_per_cm;
-        double y_1 = y / tic_per_cm;
+        double y_1  = y / tic_per_cm;
 
-        double sx = x1_1 - x_1;
-        double sy = y1_1 - y_1;
+        double sx   = x1_1 - x_1;
+        double sy   = y1_1 - y_1;
 
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
         while(wb.get_enc_pos() < s && L.opModeIsActive()) {
-            double axial = sy/s;
-            double lateral = sx/s;
-            double yaw = Imu.get_st_err(0, 0.012);
+            double axial    = sy/s;
+            double lateral  = sx/s;
+            double yaw      = Imu.get_st_err(angle, kt);
 
-            double lfp  = axial + lateral + yaw;
-            double rfp = axial - lateral - yaw;
-            double lbp   = axial - lateral + yaw;
-            double rbp  = axial + lateral - yaw;
+            double lfp      = axial + lateral + yaw;
+            double rfp      = axial - lateral - yaw;
+            double lbp      = axial - lateral + yaw;
+            double rbp      = axial + lateral - yaw;
 
             wb.setMPower(rbp, rfp, lfp, lbp);
 
             telemetry.addData("Now is (tics):", "%4f", wb.get_enc_pos());
+            telemetry.addData("Angle is", "%4f, needs %4f",
+                                                            Imu.getTurnAngle(), angle);
             telemetry.update();
         }
     }

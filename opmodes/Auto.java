@@ -34,6 +34,6 @@ public class Auto extends LinearOpMode {
 
         waitForStart();
 
-        r.move_xy(x, x1, y, y1);
+        r.move_xy(x, x1, y, y1, 0,0.012);
     }
 }
