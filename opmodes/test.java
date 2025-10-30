@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="test_TeleOp")
 public class test extends LinearOpMode {
     boolean turn90;
     boolean st90;

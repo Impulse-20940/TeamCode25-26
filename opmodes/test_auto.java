@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Cannon;
 import org.firstinspires.ftc.teamcode.IMU;
 import org.firstinspires.ftc.teamcode.RobotBuild;
 import org.firstinspires.ftc.teamcode.Wheelbase;
-@Autonomous
+@Autonomous(name="test_Autonomous")
 public class test_auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
