@@ -87,7 +87,7 @@ public class Camera {
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.update();
     }
-    double[] get_position() {
+    public double[] get_position() {
         double x = 0, y = 0, z = 0;
         double p = 0, r = 0, yaw = 0;
         double id = 0;
@@ -104,12 +104,12 @@ public class Camera {
                     r = detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES);
                     yaw = detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
                     id = detection.id;
+                } else {
+                    id = detection.id;
                 }
-            } else {
-                id = detection.id;
             }
         }
-        double[] pos = new double[]{x, y, z, p, r, yaw, id};
+        double[] pos = new double[]{currentDetections.size(), x, y, z, p, r, yaw, id};
         return pos;
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,

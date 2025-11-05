@@ -17,52 +17,29 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="test_TeleOp")
 public class test extends LinearOpMode {
-    boolean turn90;
-    boolean st90;
-    boolean flag;
-    double axial;
-    double lateral;
-    double yaw;
-    double speed = 10;
+    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
 
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
         IMU imu = new IMU();
         //Cannon cannon = new Cannon();
-        //Camera cam = new Camera();
+        Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, null, wheel, this);
+                gamepad2, imu, null, cam, wheel, this);
         //cam.set_processor();
         waitForStart();
-        while(opModeIsActive()){
-            //cam.telemetryAprilTag();
-            //Нажата кнопка B - стабилизация 90 грд
-
-            if(gamepad1.left_bumper){
-                while (gamepad1.left_bumper){}
-                speed = 4;
-                }
-            if(gamepad1.right_bumper){
-                while (gamepad1.left_bumper){}
-                speed = 1;
-                }
-            }
-            axial = gamepad1.left_stick_y;
-            lateral = -gamepad1.left_stick_x;
-            yaw = -gamepad1.right_stick_x;
-            // Базовое управление колёсной базой
-            double lfp = (axial + lateral + yaw) * speed;
-            double rfp = (axial - lateral - yaw) * speed;
-            double lbp = (axial - lateral + yaw) * speed;
-            double rbp = (axial + lateral - yaw) * speed;
-
-            wheel.setMPower(rbp, rfp, lfp, lbp);
-            wheel.setZPB();
-
-            }
+        /*
+        while (opModeIsActive()) {
+            double[] pos = cam.get_position();
+            telemetry.addData("Now is ", "%4f, %4f, %4f", pos[1], pos[2], pos[3]);
+            telemetry.update();
         }
-        //cam.stop_stream();
+        cam.stop_stream();
+         */
+        r.move_xy(-1,0, 12, 0, 0, 0.0099);
+    }
+    //cam.stop_stream();
 
-
+}
