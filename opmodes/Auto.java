@@ -40,15 +40,16 @@ public class Auto extends LinearOpMode {
             if(pos[0] != 0){
                 break;
             }
-            telemetry.addData("Detected", "%4f", pos[0]);
+            telemetry.addData("Detected (nums, id)", "%4f, %4f", pos[0], pos[7]);
             telemetry.update();
         }
+        wheel.reset_encoders();
         while(opModeIsActive()){
             double[] pos = cam.get_position();
-            x = pos[1]-1.8;
-            y = pos[2]-10;
-            telemetry.addData("Now is", "%1f, %1f, %1f, %1f, %1f", pos[0], x, y,
-                                                                    pos[2], pos[7]);
+            x = pos[1]-5;
+            y = pos[2];
+            telemetry.addData("Now is", "%1f, %1f, %1f, %1f", pos[0], x, y,
+                                                                                            pos[7]);
             telemetry.update();
 
             r.turn(0, 0.007);
