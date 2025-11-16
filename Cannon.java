@@ -14,25 +14,27 @@ public class Cannon {
     Gamepad gamepad1;
     Gamepad gamepad2;
     LinearOpMode L;
-    public DcMotor c1;
+    public DcMotor fw;
     public DcMotor c2;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             DcMotor C1, DcMotor C2,
+                             DcMotor FW, DcMotor C2,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.L = L;
-        this.c1 = C1;
+        this.fw = FW;
         this.c2 = C2;
-        c1 = hardwareMap.get(DcMotor.class, "c1");
+        fw = hardwareMap.get(DcMotor.class, "fw");
         c2 = hardwareMap.get(DcMotor.class, "c2");
         c2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void cannon_control(double power){
-        c1.setPower(power);
         c2.setPower(power);
+    }
+    public void fw_control(double power){
+        fw.setPower(power);
     }
 }

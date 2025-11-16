@@ -23,7 +23,7 @@ public class Robot {
     public DcMotor rb;
     public DcMotor lf;
     public DcMotor lb;
-    public DcMotor c1;
+    public DcMotor fw;
     public DcMotor c2;
     public BNO055IMU imu;
     public VisionPortal visionPortal;

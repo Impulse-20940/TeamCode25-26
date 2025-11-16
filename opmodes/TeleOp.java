@@ -25,7 +25,7 @@ public class TeleOp extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
         IMU imu = new IMU();
-        //Cannon cannon = new Cannon();
+        Cannon cannon = new Cannon();
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
@@ -57,6 +57,12 @@ public class TeleOp extends LinearOpMode {
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
+
+            if(gamepad1.right_bumper){
+                cannon.fw_control(1);
+            }else{
+                cannon.fw_control(0);
+            }
         }
         cam.stop_stream();
     }

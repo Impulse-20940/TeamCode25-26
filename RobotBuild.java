@@ -25,7 +25,7 @@ public class RobotBuild extends Robot {
         if (cnn != null) {
             this.cnn = cnn;
             cnn.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
-                    this.c1, this.c2, L);
+                    this.fw, this.c2, L);
         }
         if (cam != null) {
             this.cam = cam;
