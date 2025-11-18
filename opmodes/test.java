@@ -32,7 +32,7 @@ public class test extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             double[] pos = cam.get_position();
-            telemetry.addData("Now is ", "%4f, %4f, %4f", pos[1], pos[2], pos[3]);
+            telemetry.addData("Now is ", "%4f, %4f, %4f, %4f", pos[1], pos[2], pos[3], pos[6]);
             telemetry.update();
         }
         cam.stop_stream();

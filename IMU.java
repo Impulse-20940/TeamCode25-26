@@ -54,7 +54,7 @@ public class IMU {
         Acceleration gravity = imu.getGravity();
         return angles.firstAngle;
     }
-    public double get_st_err(double stable, double kt){
+    public double get_st_err(double stable, double kt) {
         return (stable-getTurnAngle())*kt;
-    }
+    };
 }

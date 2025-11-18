@@ -104,26 +104,25 @@ public class RobotBuild extends Robot {
         wb.setZPB();
     }
 
-    public void move_xy(double x, double x1, double y, double y1,
-                                        double angle, double kt){
-        double tic_per_inch = 12.36/480;
-        double x1_1         = x1 / tic_per_inch;
-        double x_1          = x  / tic_per_inch;
-        double y1_1         = y1 / tic_per_inch;
-        double y_1          = y  / tic_per_inch;
+    public void move_xy(double x, double x1, double y, double y1, double angle, double kt){
+        wb.reset_encoders();
+        double tic_per_inch  = 12.36/480;
+        x1                  /= tic_per_inch;
+        x                   /= tic_per_inch;
+        y1                  /= tic_per_inch;
+        y                   /= tic_per_inch;
 
-        double sx           = x1_1 - x_1;
-        double sy           = y1_1 - y_1;
+        double sx            = x1 - x;
+        double sy            = y1 - y;
 
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
         while(Math.abs(wb.get_enc_pos()) < s && L.opModeIsActive()) {
-            //double err  = s - Math.abs(wb.get_enc_pos());
-            //double p    = err * kp;
 
-            double axial    = sy/s*0.5;
-            double lateral  = sx/s*0.5;
-            double yaw      = Imu.get_st_err(angle, kt);
+            double axial    = sy/s;
+            double lateral  = sx/s;
+            //double yaw      = Imu.get_st_err(angle, kt);
+            double yaw = 0;
 
             double lfp      = axial + lateral + yaw;
             double rfp      = axial - lateral - yaw;
@@ -136,6 +135,8 @@ public class RobotBuild extends Robot {
                                                                                                     s);
             telemetry.addData("Angle is", "%4f, needs %4f",
                                                             Imu.getTurnAngle(), angle);
+            telemetry.addData("Stable error", "%4f",
+                                                Imu.get_st_err(angle, kt));
             telemetry.update();
         }
     }

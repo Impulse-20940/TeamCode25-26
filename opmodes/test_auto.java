@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Cannon;
 import org.firstinspires.ftc.teamcode.IMU;
 import org.firstinspires.ftc.teamcode.RobotBuild;
 import org.firstinspires.ftc.teamcode.Wheelbase;
+@Config
 @Autonomous(name="test_Autonomous")
 public class test_auto extends LinearOpMode {
     Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
@@ -18,12 +20,16 @@ public class test_auto extends LinearOpMode {
         RobotBuild R = new RobotBuild();
         IMU imu = new IMU();
         Wheelbase wheel = new Wheelbase();
+        Camera cam = new Camera();
         R.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, null, wheel, this);
+                gamepad2, imu, null, cam, wheel, this);
         waitForStart();
         while(opModeIsActive()){
-            telemetry.addData("Now is", "%4f", wheel.get_enc_pos());
-            telemetry.update();
+            R.turn(0, 0.006);
+            R.move_xy(10, 0, 10, 0 , 0, 0.006);
+            wheel.setZPB();
+            wheel.setMPower(0, 0, 0, 0);
+            break;
         }
     }
 }
