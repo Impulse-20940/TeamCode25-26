@@ -46,7 +46,7 @@ public class TeleOp extends LinearOpMode {
                 axial = -gamepad1.left_stick_x;
                 lateral = -gamepad1.left_stick_y;
                 yaw = imu.get_st_err(-90, 0.012);
-            } else {
+            } else { //without head
                 double x = -gamepad1.left_stick_x;
                 double y = gamepad1.left_stick_y;
 
