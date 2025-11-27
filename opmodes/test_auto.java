@@ -25,11 +25,8 @@ public class test_auto extends LinearOpMode {
                 gamepad2, imu, null, cam, wheel, this);
         waitForStart();
         while(opModeIsActive()){
-            R.turn(0, 0.006);
-            R.move_xy(10, 0, 10, 0 , 0, 0.006);
-            wheel.setZPB();
-            wheel.setMPower(0, 0, 0, 0);
-            break;
+            telemetry.addData("Now is (tics):", "%4f, %4f", Math.abs(wheel.get_enc_pos());
+            telemetry.update();
         }
     }
 }
