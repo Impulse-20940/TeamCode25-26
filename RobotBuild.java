@@ -84,9 +84,10 @@ public class RobotBuild extends Robot {
         wb.setZPB();
     }
 
-    public void turn(double grd, double kt) {
+    public void turn(double grd, double kt) {//Функция поворота
         double yaw;
         runtime.reset();
+
         while (L.opModeIsActive() && runtime.milliseconds() < 1000) {
             //Вычисление угла стабилизации
             yaw = Imu.get_st_err(grd, kt);
@@ -103,6 +104,29 @@ public class RobotBuild extends Robot {
         }
         wb.setZPB();
     }
+
+    public void fd(double cm){//Функция проезда вперёд
+        wb.reset_encoders();
+        double tic_per_cm = (12.36/480)*2.54;//коэф перевода из тиков в сантиметры
+        double axial      = 0.4;
+        double yaw        = Imu.get_st_err(Imu.getTurnAngle(), 0.012);
+        while (wb.get_enc_pos()*tic_per_cm < cm){
+            //double err = cm-(wb.get_enc_pos()*tic_per_cm);//Формирование ошибки
+            //double P   = err * kp;           //Коэф пропорциональности
+            yaw        = Imu.get_st_err(Imu.getTurnAngle(), 0.012);
+            double lfp = (axial+yaw);    //Формирование выходных значений
+            double rfp = (axial-yaw);
+            double lbp = (axial+yaw);
+            double rbp = (axial-yaw);
+
+            wb.setMPower(rbp, rfp, lfp, lbp);
+        }
+        wb.setMPower(0, 0, 0, 0);
+        wb.setZPB();
+    }
+
+
+
 
     public void move_xy(double x, double x1, double y, double y1, double angle, double kt){
         wb.reset_encoders();
