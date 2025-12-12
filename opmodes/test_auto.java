@@ -25,7 +25,7 @@ public class test_auto extends LinearOpMode {
                 gamepad2, imu, null, cam, wheel, this);
         waitForStart();
         while(opModeIsActive()){
-            telemetry.addData("Now is (tics):", "%4f, %4f", Math.abs(wheel.get_enc_pos());
+            telemetry.addData("Now is (tics):", "%4f, %4f", Math.abs(wheel.get_enc_pos()));
             telemetry.update();
         }
     }

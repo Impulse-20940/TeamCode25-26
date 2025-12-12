@@ -22,7 +22,6 @@ public class TeleOp extends LinearOpMode {
     double lateral;
     double yaw;
     public static double a;
-
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -31,28 +30,11 @@ public class TeleOp extends LinearOpMode {
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, cannon, null, wheel, this);
+                gamepad2, imu, cannon, cam, wheel, this);
         //cam.set_processor();
         waitForStart();
         while(opModeIsActive()){
-            //cam.telemetryAprilTag();
-            // 1 - серво-мотор
-            double bmp_rt = gamepad2.right_trigger;
-            if(bmp_rt == 1){
-                if(flag) {
-                    cannon.srv1_control(180);
-                    flag = false;
-                } else flag = true;
-            } else cannon.srv1_control(0);
-
-            // 2 - серво-мотор
-            double bmp_lt = gamepad2.left_trigger;
-            if(bmp_lt == 1){
-                if(flag){
-                    cannon.srv2_control(90);
-                    flag = false;
-                } else flag = true;
-            } else cannon.srv2_control(0);
+            cam.telemetryAprilTag();
             //Нажата кнопка B - стабилизация 90 грд
             boolean btn_b = gamepad1.b;
             if(btn_b){
@@ -64,7 +46,7 @@ public class TeleOp extends LinearOpMode {
                 axial = -gamepad1.left_stick_x;
                 lateral = -gamepad1.left_stick_y;
                 yaw = imu.get_st_err(-90, 0.012);
-            } else {      //without head
+            } else { //without head
                 double x = -gamepad1.left_stick_x;
                 double y = gamepad1.left_stick_y;
 
@@ -87,12 +69,12 @@ public class TeleOp extends LinearOpMode {
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad1.right_bumper? 1 : 0);  // Захват
-            cannon.bw_control(gamepad2.left_stick_y);        // Шутер
+            cannon.fw_control(gamepad1.right_bumper? 1 : 0);
+            cannon.bw_control(gamepad1.right_trigger);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
         }
-        //cam.stop_stream();
+        cam.stop_stream();
     }
 }
