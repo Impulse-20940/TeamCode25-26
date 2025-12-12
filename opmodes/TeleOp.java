@@ -30,7 +30,7 @@ public class TeleOp extends LinearOpMode {
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, cannon, cam, wheel, this);
+                gamepad2, imu, null, cam, wheel, this);
         //cam.set_processor();
         waitForStart();
         while(opModeIsActive()){
@@ -48,7 +48,7 @@ public class TeleOp extends LinearOpMode {
                 yaw = imu.get_st_err(-90, 0.012);
             } else { //without head
                 double x = -gamepad1.left_stick_x;
-                double y = gamepad1.left_stick_y;
+                double y = -gamepad1.left_stick_y;
 
                 double deg = imu.getTurnAngle();
                 double l_alpha = 90 + deg;
@@ -63,14 +63,15 @@ public class TeleOp extends LinearOpMode {
 
                 telemetry.addData("Axial is", axial);
                 telemetry.addData("Lateral is", lateral);
+                telemetry.addData("Yaw is", yaw);
            }
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad1.right_bumper? 1 : 0);
-            cannon.bw_control(gamepad1.right_trigger);
+            //cannon.fw_control(gamepad1.right_bumper? 1 : 0);
+            //cannon.bw_control(gamepad2.right_trigger);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();

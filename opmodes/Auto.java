@@ -45,8 +45,8 @@ public class Auto extends LinearOpMode {
         }
         while(opModeIsActive()){
             double[] pos = cam.get_position();
-            x = pos[1];
-            y = pos[2];
+            x = pos[1]*2.54;
+            y = pos[2]*2.54;
             telemetry.addData("Now is", "%1f, %1f, %1f, %1f", pos[0], x, y,
                                                                                             pos[7]);
             telemetry.update();
