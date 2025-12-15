@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Camera;
@@ -23,7 +22,7 @@ public class Auto extends LinearOpMode {
     public static double x1;
     public static double y1;
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         RobotBuild r = new RobotBuild();
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();

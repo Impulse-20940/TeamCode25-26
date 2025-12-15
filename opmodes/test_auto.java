@@ -16,17 +16,14 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 public class test_auto extends LinearOpMode {
     Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         RobotBuild R = new RobotBuild();
         IMU imu = new IMU();
         Wheelbase wheel = new Wheelbase();
-        Camera cam = new Camera();
+        //Camera cam = new Camera();
         R.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, cam, wheel, this);
+                gamepad2, imu, null, null, wheel, this);
         waitForStart();
-        while(opModeIsActive()){
-            telemetry.addData("Now is (tics):", "%4f, %4f", Math.abs(wheel.get_enc_pos()));
-            telemetry.update();
-        }
+        R.move_xy(0, 0, 0, 1000, 0, 0.012);
     }
 }

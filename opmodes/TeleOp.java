@@ -15,13 +15,13 @@ import java.lang.Math;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
-    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    //Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
     boolean st90;
     boolean flag;
     double axial;
     double lateral;
     double yaw;
-
+    public static double a;
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -31,28 +31,22 @@ public class TeleOp extends LinearOpMode {
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, imu, cannon, cam, wheel, this);
-        //cam.set_processor();
+        cam.set_processor();
         waitForStart();
         while(opModeIsActive()){
-            //cam.telemetryAprilTag();
+            cam.telemetryAprilTag();
+            /*
             double bmp_rt = gamepad2.right_trigger;
-            if(bmp_rt == 1){
-                if(flag) {
-                    cannon.srv1_control(180);
-                    flag = false;
-                } else flag = true;
-            } else cannon.srv1_control(0);
-
+            if(bmp_rt > 0.5){
+                cannon.srv1_control(80);
+            } else cannon.srv1_control(15);
             // 2 - серво-мотор
             double bmp_lt = gamepad2.left_trigger;
-            if(bmp_lt == 1){
-                if(flag){
-                    cannon.srv2_control(90);
-                    flag = false;
-                } else flag = true;
+            if(bmp_lt > 0.5){
+                cannon.srv2_control(90);
             } else cannon.srv2_control(0);
-
             //Нажата кнопка B - стабилизация 90 грд
+            */
             boolean btn_b = gamepad1.b;
             if(btn_b){
                 if(flag) st90 = !st90;
@@ -65,7 +59,7 @@ public class TeleOp extends LinearOpMode {
                 yaw = imu.get_st_err(-90, 0.012);
             } else { //without head
                 double x = -gamepad1.left_stick_x;
-                double y = gamepad1.left_stick_y;
+                double y = -gamepad1.left_stick_y;
 
                 double deg = imu.getTurnAngle();
                 double l_alpha = 90 + deg;
@@ -80,18 +74,19 @@ public class TeleOp extends LinearOpMode {
 
                 telemetry.addData("Axial is", axial);
                 telemetry.addData("Lateral is", lateral);
+                telemetry.addData("Yaw is", yaw);
            }
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad1.right_bumper? 1 : 0);  // Захват
-            cannon.bw_control(gamepad2.left_stick_y);
+            cannon.fw_control(gamepad2.left_bumper? 1 : 0);
+            cannon.bw_control(gamepad1.right_trigger);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
         }
-        //cam.stop_stream();
+        cam.stop_stream();
     }
 }

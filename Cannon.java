@@ -32,10 +32,10 @@ public class Cannon {
         this.bw = BW;
         this.srv1 = SRV1;
         this.srv2 = SRV2;
-        fw = hardwareMap.get(DcMotor.class, "c1");
-        bw = hardwareMap.get(DcMotor.class, "c2");
-        srv1 = hardwareMap.get(Servo.class, "s1");
-        srv2 = hardwareMap.get(Servo.class, "s2");
+        this.fw = hardwareMap.get(DcMotor.class, "c1");
+        this.bw = hardwareMap.get(DcMotor.class, "c2");
+        this.srv1 = hardwareMap.get(Servo.class, "s1");
+        this.srv2 = hardwareMap.get(Servo.class, "s2");
         //c2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 //    public void cannon_control(double power){
