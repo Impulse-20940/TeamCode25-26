@@ -108,18 +108,15 @@ public class RobotBuild extends Robot {
     public void fd(double cm, double kp){//Функция проезда вперёд
         wb.reset_encoders();
         double tic_per_cm = (12.36/480)*2.54;//коэф перевода из тиков в сантиметры
-        double axial      = 0.4;
-        double yaw        = Imu.get_st_err(Imu.getTurnAngle(), 0.012);
-        double enc        = 1;
+        double ang        = Imu.getTurnAngle();
         while (wb.get_enc_pos()*tic_per_cm < cm){
-            double err = cm-(enc*tic_per_cm);//Формирование ошибки
-            double p   = err * kp;           //Коэф пропорциональности
-            yaw        = Imu.get_st_err(Imu.getTurnAngle(), 0.012);
-            enc        = wb.get_enc_pos();
-            double lfp = (axial+yaw)*p;    //Формирование выходных значений
-            double rfp = (axial-yaw)*p;
-            double lbp = (axial+yaw)*p;
-            double rbp = (axial-yaw)*p;
+            double err = cm-(wb.get_enc_pos()*tic_per_cm);//Формирование ошибки
+            double axial   = err * kp;           //Коэф пропорциональности
+            double yaw = Imu.get_st_err(ang, 0.012);
+            double lfp = (axial+yaw);    //Формирование выходных значений
+            double rfp = (axial-yaw);
+            double lbp = (axial+yaw);
+            double rbp = (axial-yaw);
 
             wb.setMPower(rbp, rfp, lfp, lbp);
         }
