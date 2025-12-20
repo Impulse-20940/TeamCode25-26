@@ -81,8 +81,8 @@ public class TeleOp extends LinearOpMode {
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad2.left_bumper? 1 : 0);
-            cannon.bw_control(gamepad1.right_trigger);
+            cannon.fw_control(gamepad1.left_bumper? 1 : 0);
+            cannon.bw_control(gamepad2.right_trigger);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
