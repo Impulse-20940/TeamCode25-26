@@ -38,8 +38,8 @@ public class Wheelbase {
         rb = hardwareMap.get(DcMotor.class, "rb");
         lf = hardwareMap.get(DcMotor.class, "lf");
         lb = hardwareMap.get(DcMotor.class, "lb");
-        rf.setDirection(DcMotor.Direction.REVERSE);
-        rb.setDirection(DcMotor.Direction.REVERSE);
+        rb.setDirection(DcMotorSimple.Direction.REVERSE);
+        rf.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void reset_encoders(){
         lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -59,6 +59,20 @@ public class Wheelbase {
     }
     public double get_enc_pos(){
         return lf.getCurrentPosition();
+    }
+    public void telemetry_ports(){
+        telemetry.addData("RF is in", rf.getPortNumber());
+        telemetry.addData("RB is in", rb.getPortNumber());
+        telemetry.addData("LF is in", lf.getPortNumber());
+        telemetry.addData("LB is in", lb.getPortNumber());
+        telemetry.update();
+    }
+    public void telemetry_power(){
+        telemetry.addData("RF power is", rf.getPower());
+        telemetry.addData("RB power is", rb.getPower());
+        telemetry.addData("LF power is", lf.getPower());
+        telemetry.addData("LB power is", lb.getPower());
+        telemetry.update();
     }
 }
 

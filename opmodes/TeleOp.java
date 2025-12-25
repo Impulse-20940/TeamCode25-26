@@ -15,13 +15,12 @@ import java.lang.Math;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
-    //Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
     boolean st90;
     boolean flag;
     double axial;
     double lateral;
     double yaw;
-    public static double a;
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -30,8 +29,10 @@ public class TeleOp extends LinearOpMode {
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, cannon, cam, wheel, this);
+                gamepad2, imu, null, null, wheel, this);
         cam.set_processor();
+        wheel.telemetry_ports();
+
         waitForStart();
         while(opModeIsActive()){
             cam.telemetryAprilTag();
@@ -52,14 +53,21 @@ public class TeleOp extends LinearOpMode {
                 if(flag) st90 = !st90;
                 flag = false;
             } else flag = true;
+
+            boolean btn_x = gamepad1.x;
+            if(btn_x){
+                if(flag) imu.calibrate_imu();
+                flag = false;
+            } else flag = true;
+
             // Проверка стабизизации
             if(st90){
-                axial = -gamepad1.left_stick_x;
+                axial = gamepad1.left_stick_x;
                 lateral = -gamepad1.left_stick_y;
                 yaw = imu.get_st_err(-90, 0.012);
             } else { //without head
                 double x = -gamepad1.left_stick_x;
-                double y = -gamepad1.left_stick_y;
+                double y = gamepad1.left_stick_y;
 
                 double deg = imu.getTurnAngle();
                 double l_alpha = 90 + deg;
@@ -72,20 +80,22 @@ public class TeleOp extends LinearOpMode {
                 lateral = x * Math.sin(l_rads) + y * Math.cos(a_rads);
                 yaw = -gamepad1.right_stick_x;
 
-                telemetry.addData("Axial is", axial);
-                telemetry.addData("Lateral is", lateral);
-                telemetry.addData("Yaw is", yaw);
+                //telemetry.addData("Axial is", axial);
+                //telemetry.addData("Lateral is", lateral);
+                //telemetry.addData("Yaw is", yaw);
            }
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad2.left_bumper? 1 : 0);
-            cannon.bw_control(gamepad1.right_trigger);
+            //cannon.fw_control(gamepad2.left_bumper? 1 : 0);
+            //cannon.bw_control(gamepad1.right_trigger);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
+
+            //wheel.telemetry_power();
         }
         cam.stop_stream();
     }

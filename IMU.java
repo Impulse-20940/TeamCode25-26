@@ -56,5 +56,22 @@ public class IMU {
     }
     public double get_st_err(double stable, double kt) {
         return (stable-getTurnAngle())*kt;
-    };
+    }
+    public void calibrate_imu(){
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "SensorBNO055IMUCalibration.json";
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu.initialize(parameters);
+        while (!imu.isGyroCalibrated()) { //Калибровка акселерометра
+            R.delay(30);
+            telemetry.addData("Wait", "Calibration"); //Сообщение о калибровке
+            telemetry.update();
+        }
+        telemetry.addData("Done!", "Calibrated"); //Сообщение об окончании калибровки
+        telemetry.update();
+    }
 }
