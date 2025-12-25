@@ -105,16 +105,14 @@ public class RobotBuild extends Robot {
         wb.setZPB();
     }
 
-    public void fd(double cm){//Функция проезда вперёд
+    public void fd(double cm, double kp){//Функция проезда вперёд
         wb.reset_encoders();
         double tic_per_cm = (12.36/480)*2.54;//коэф перевода из тиков в сантиметры
-        double axial      = 0.4;
-        double yaw        = Imu.get_st_err(Imu.getTurnAngle(), 0.012);
+        double ang        = Imu.getTurnAngle();
         while (wb.get_enc_pos()*tic_per_cm < cm){
-            //double err = cm-(wb.get_enc_pos()*tic_per_cm);//Формирование ошибки
-            //double P   = err * kp;           //Коэф пропорциональности
-            //axial = P;
-            yaw        = Imu.get_st_err(Imu.getTurnAngle(), 0.012);
+            double err = cm-(wb.get_enc_pos()*tic_per_cm);//Формирование ошибки
+            double axial   = err * kp;           //Коэф пропорциональности
+            double yaw = Imu.get_st_err(ang, 0.012);
             double lfp = (axial+yaw);    //Формирование выходных значений
             double rfp = (axial-yaw);
             double lbp = (axial+yaw);
@@ -131,11 +129,11 @@ public class RobotBuild extends Robot {
 
     public void move_xy(double x, double x1, double y, double y1, double angle, double kt){
         wb.reset_encoders();
-        double tic_per_cm  = 12.36/480;
-        x1                  /= tic_per_cm;
-        x                   /= tic_per_cm;
-        y1                  /= tic_per_cm;
-        y                   /= tic_per_cm;
+        double tic_per_inch  = 12.36/480;
+        x1                  /= tic_per_inch;
+        x                   /= tic_per_inch;
+        y1                  /= tic_per_inch;
+        y                   /= tic_per_inch;
 
         double sx            = x1 - x;
         double sy            = y1 - y;
