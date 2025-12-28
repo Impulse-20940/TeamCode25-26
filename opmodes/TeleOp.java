@@ -15,7 +15,7 @@ import java.lang.Math;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
-    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    //  Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
     boolean st90;
     boolean flag;
     double axial;
@@ -29,7 +29,7 @@ public class TeleOp extends LinearOpMode {
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, null, wheel, this);
+                gamepad2, imu, null, cam, wheel, this);
         cam.set_processor();
         wheel.telemetry_ports();
 
@@ -48,6 +48,20 @@ public class TeleOp extends LinearOpMode {
             } else cannon.srv2_control(0);
             //Нажата кнопка B - стабилизация 90 грд
             */
+
+            double x = -gamepad1.left_stick_x;
+            double y = gamepad1.left_stick_y;
+
+            double deg = imu.getTurnAngle();
+            double l_alpha = 90 + deg;
+            double a_alpha = 90 - deg;
+
+            double a_rads = Math.toRadians(a_alpha);
+            double l_rads = Math.toRadians(l_alpha);
+
+            axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
+            lateral = x * Math.sin(l_rads) + y * Math.cos(a_rads);
+
             boolean btn_b = gamepad1.b;
             if(btn_b){
                 if(flag) st90 = !st90;
@@ -62,27 +76,13 @@ public class TeleOp extends LinearOpMode {
 
             // Проверка стабизизации
             if(st90){
-                axial = gamepad1.left_stick_x;
-                lateral = -gamepad1.left_stick_y;
                 yaw = imu.get_st_err(-90, 0.012);
             } else { //without head
-                double x = -gamepad1.left_stick_x;
-                double y = gamepad1.left_stick_y;
-
-                double deg = imu.getTurnAngle();
-                double l_alpha = 90 + deg;
-                double a_alpha = 90 - deg;
-
-                double a_rads = Math.toRadians(a_alpha);
-                double l_rads = Math.toRadians(l_alpha);
-
-                axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
-                lateral = x * Math.sin(l_rads) + y * Math.cos(a_rads);
                 yaw = -gamepad1.right_stick_x;
 
-                //telemetry.addData("Axial is", axial);
-                //telemetry.addData("Lateral is", lateral);
-                //telemetry.addData("Yaw is", yaw);
+                telemetry.addData("Axial is", axial);
+                telemetry.addData("Lateral is", lateral);
+                telemetry.addData("Yaw is", yaw);
            }
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;

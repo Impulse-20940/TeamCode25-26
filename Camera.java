@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
@@ -33,23 +34,25 @@ public class Camera {
 
     VisionPortal visionPortal;
     private void initAprilTag() {
+        double fx = 1484.97327503;
+        double fy = 1483.93259713;
+        double cx = 963.66059811;
+        double cy = 536.4853148;
+
         aprilTag = new AprilTagProcessor.Builder()
-
-                .setCameraPose(cameraPosition, cameraOrientation)
-
+                //.setCameraPose(cameraPosition, cameraOrientation)
+                .setLensIntrinsics(fx, fy, cx, cy)
+                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .build();
 
         VisionPortal.Builder builder = new VisionPortal.Builder();
-
         if (USE_WEBCAM) {
             builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
         builder.addProcessor(aprilTag);
-
         visionPortal = builder.build();
-
     }
     public void set_processor(){
         visionPortal.setProcessorEnabled(aprilTag, true);
@@ -97,9 +100,9 @@ public class Camera {
             if (detection.metadata != null) {
                 // Only use tags that don't have Obelisk in them
                 if (!detection.metadata.name.contains("Obelisk")) {
-                    x = detection.robotPose.getPosition().x;
-                    y = detection.robotPose.getPosition().y;
-                    z = detection.robotPose.getPosition().z;
+                    x = detection.robotPose.getPosition().x * 2.54;
+                    y = detection.robotPose.getPosition().y * 2.54;
+                    z = detection.robotPose.getPosition().z * 2.54;
                     p = detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES);
                     r = detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES);
                     yaw = detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
