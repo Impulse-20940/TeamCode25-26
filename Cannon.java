@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,14 +16,13 @@ public class Cannon {
     Gamepad gamepad1;
     Gamepad gamepad2;
     LinearOpMode L;
-    public DcMotor fw;
+    public DcMotorEx fw;
     public DcMotor bw;
     public Servo srv1;
-    public Servo srv2;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             DcMotor FW, DcMotor BW,
-                             LinearOpMode L, Servo SRV1, Servo SRV2){
+                             DcMotorEx FW, DcMotor BW,
+                             LinearOpMode L, Servo SRV1){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
@@ -31,11 +31,9 @@ public class Cannon {
         this.fw = FW;
         this.bw = BW;
         this.srv1 = SRV1;
-        this.srv2 = SRV2;
-        this.fw = hardwareMap.get(DcMotor.class, "c1");
+        this.fw = hardwareMap.get(DcMotorEx.class, "c1");
         this.bw = hardwareMap.get(DcMotor.class, "c2");
         this.srv1 = hardwareMap.get(Servo.class, "s1");
-        this.srv2 = hardwareMap.get(Servo.class, "s2");
         //c2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 //    public void cannon_control(double power){
@@ -50,7 +48,7 @@ public class Cannon {
     public void srv1_control(double pos){
         srv1.setPosition(pos);
     }
-    public void srv2_control(double pos){
-        srv2.setPosition(pos);
+    public double get_shooter_vel(){
+        return fw.getVelocity();
     }
 }

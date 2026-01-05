@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.annotation.SuppressLint;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -61,7 +63,9 @@ public class Camera {
         visionPortal.setProcessorEnabled(aprilTag, false);
         visionPortal.close();
     }
+    @SuppressLint("DefaultLocale")
     public void telemetryAprilTag() {
+        double[] shift = {0, 0, 0};
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
         for (AprilTagDetection detection : currentDetections) {
@@ -70,9 +74,9 @@ public class Camera {
                 // Only use tags that don't have Obelisk in them
                 if (!detection.metadata.name.contains("Obelisk")) {
                     telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
-                            detection.robotPose.getPosition().x,
-                            detection.robotPose.getPosition().y,
-                            detection.robotPose.getPosition().z));
+                            detection.robotPose.getPosition().x * 2.54 + shift[0],
+                            detection.robotPose.getPosition().y * 2.54 + shift[1],
+                            detection.robotPose.getPosition().z * 2.54 + shift[2]));
                     telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
                             detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
                             detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
@@ -90,7 +94,8 @@ public class Camera {
         telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
         telemetry.update();
     }
-    public double[] get_position() {
+    public double[] get_position(){
+        double[] shift = {0, 0, 0};
         double x = 0, y = 0, z = 0;
         double p = 0, r = 0, yaw = 0;
         double id = 0;
@@ -100,9 +105,9 @@ public class Camera {
             if (detection.metadata != null) {
                 // Only use tags that don't have Obelisk in them
                 if (!detection.metadata.name.contains("Obelisk")) {
-                    x = detection.robotPose.getPosition().x * 2.54;
-                    y = detection.robotPose.getPosition().y * 2.54;
-                    z = detection.robotPose.getPosition().z * 2.54;
+                    x = detection.robotPose.getPosition().x * 2.54 + shift[0];
+                    y = detection.robotPose.getPosition().y * 2.54 + shift[1];
+                    z = detection.robotPose.getPosition().z * 2.54 + shift[2];
                     p = detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES);
                     r = detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES);
                     yaw = detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
