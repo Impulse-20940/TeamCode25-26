@@ -109,19 +109,25 @@ public class RobotBuild extends Robot {
         wb.reset_encoders();
         double tic_per_cm = (12.36/480)*2.54;//коэф перевода из тиков в сантиметры
         double ang        = Imu.getTurnAngle();
-        while (wb.get_enc_pos()*tic_per_cm < cm){
+        double axial = 1;
+        while (Math.abs(wb.get_enc_pos())*tic_per_cm*1.4 < cm){
             double err = cm-(wb.get_enc_pos()*tic_per_cm);//Формирование ошибки
-            double axial   = err * kp;           //Коэф пропорциональности
-            double yaw = Imu.get_st_err(ang, 0.012);
-            double lfp = (axial+yaw);    //Формирование выходных значений
-            double rfp = (axial-yaw);
-            double lbp = (axial+yaw);
-            double rbp = (axial-yaw);
 
+            double p = err * kp * -1;           //Коэф пропорциональности
+            double yaw   = Imu.get_st_err(ang, 0.012);
+
+            double lfp = (axial+yaw)*p;    //Формирование выходных значений
+            double rfp = (axial-yaw)*p;
+            double lbp = (axial+yaw)*p;
+            double rbp = (axial-yaw)*p;
+            telemetry.addData("Encoder is", wb.get_enc_pos());
+            telemetry.update();
+            stable(0, 0, ang, 100, 0.012);
             wb.setMPower(rbp, rfp, lfp, lbp);
         }
         wb.setMPower(0, 0, 0, 0);
         wb.setZPB();
+        stable(0, 0, ang, 1000, 0.012);
     }
 
 
