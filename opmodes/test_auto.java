@@ -20,10 +20,15 @@ public class test_auto extends LinearOpMode {
         RobotBuild R = new RobotBuild();
         IMU imu = new IMU();
         Wheelbase wheel = new Wheelbase();
-        //Camera cam = new Camera();
+        Camera cam = new Camera();
+        //Cannon cannon = new Cannon();
         R.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, null, wheel, this);
+                gamepad2, null, null, cam, null, this);
         waitForStart();
-        R.move_xy(0, 0, 0, 1000, 0, 0.012);
+        cam.set_processor();
+        while(opModeIsActive()){
+            cam.telemetryAprilTag();
+        }
+        cam.stop_stream();
     }
 }

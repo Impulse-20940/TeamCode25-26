@@ -25,8 +25,8 @@ public class Robot {
     public DcMotor rb;
     public DcMotor lf;
     public DcMotor lb;
-    public DcMotorEx fw;
     public DcMotor c2;
+    public DcMotorEx fw;
     public BNO055IMU imu;
     public VisionPortal visionPortal;
     public AprilTagProcessor aprilTag;

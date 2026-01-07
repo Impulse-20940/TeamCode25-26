@@ -7,10 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Cannon {
+    ElapsedTime runtime;
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;
@@ -19,6 +21,8 @@ public class Cannon {
     public DcMotorEx fw;
     public DcMotor bw;
     public Servo srv1;
+    public boolean shoot;
+    public double shoot_time;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              DcMotorEx FW, DcMotor BW,
@@ -39,8 +43,24 @@ public class Cannon {
 //    public void cannon_control(double power){
 //        c2.setPower(power);
 //    }
-    public void fw_control(double power){
+    public void fw_control(double power, double min_speed){
         fw.setPower(power);
+        boolean bmp_rt = gamepad2.right_bumper;
+        if(get_shooter_vel() > min_speed || bmp_rt){
+            if(!shoot){
+                srv1_control(0);
+                shoot_time = runtime.milliseconds();
+                shoot = true;
+            }
+            if(runtime.milliseconds()-shoot_time > 1000){
+                srv1_control(80);
+                telemetry.addData("Down", 0);
+            }
+            telemetry.addData("Runtime ", runtime.milliseconds()-shoot_time);
+        } else{
+            srv1_control(80);
+            shoot = false;
+        }
     }
     public void bw_control(double power){
         bw.setPower(power);

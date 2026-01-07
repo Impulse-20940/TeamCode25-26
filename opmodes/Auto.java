@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Camera;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 @Autonomous(name = "Main_Autonomous")
 public class Auto extends LinearOpMode {
     Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    ElapsedTime runtime;
     public static double x;
     public static double y;
 
@@ -26,6 +28,7 @@ public class Auto extends LinearOpMode {
         RobotBuild r = new RobotBuild();
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
+        Cannon cannon = new Cannon();
         IMU imu = new IMU();
         r.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, imu, null, cam, wheel, this);
@@ -34,29 +37,15 @@ public class Auto extends LinearOpMode {
         waitForStart();
 
         cam.set_processor();
-        while(opModeIsActive()){
-            double[] pos = cam.get_position();
-            if(pos[0] != 0){
-                break;
-            }
-            telemetry.addData("Detected (nums, id)", "%4f, %4f", pos[0], pos[7]);
-            telemetry.update();
-        }
-        while(opModeIsActive()){
-            double[] pos = cam.get_position();
-            x = pos[1]*2.54;
-            y = pos[2]*2.54;
-            telemetry.addData("Now is", "%1f, %1f, %1f, %1f", pos[0], x, y,
-                                                                                            pos[7]);
-            telemetry.update();
+        r.move_xy(0, 0, 0, 60, 0, 1, 0.006);
 
-            r.turn(0, 0.007);
-            r.delay(1000);
-            r.move_xy(x, x1, y, y1, 0,0.006);
-            wheel.setMPower(0, 0, 0, 0);
-            wheel.setZPB();
-            break;
+        runtime.reset();
+        while (runtime.milliseconds() < 4000){
+            cannon.fw_control(1, 1600);
         }
+        cannon.fw_control(0, 1600);
+
+        cam.telemetryAprilTag();
         cam.stop_stream();
     }
 }

@@ -133,13 +133,13 @@ public class RobotBuild extends Robot {
 
 
 
-    public void move_xy(double x, double x1, double y, double y1, double angle, double kt){
+    public void move_xy(double x, double x1, double y, double y1, double angle, double kp, double kt){
         wb.reset_encoders();
-        double tic_per_inch  = 12.36/480;
-        x1                  /= tic_per_inch;
-        x                   /= tic_per_inch;
-        y1                  /= tic_per_inch;
-        y                   /= tic_per_inch;
+        double tic_per_cm  = 30.458/480;
+        x1                  /= tic_per_cm;
+        x                   /= tic_per_cm;
+        y1                  /= tic_per_cm;
+        y                   /= tic_per_cm;
 
         double sx            = x1 - x;
         double sy            = y1 - y;
@@ -147,16 +147,17 @@ public class RobotBuild extends Robot {
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
         while(Math.abs(wb.get_enc_pos()) < s && L.opModeIsActive()) {
+            double error = s - Math.abs(wb.get_enc_pos());
+            double p = error * kp;
 
-            double axial    = sy/s;
-            double lateral  = sx/s;
-            //double yaw      = Imu.get_st_err(angle, kt);
-            double yaw = 0;
+            double axial    = sy/s * 0.2;
+            double lateral  = sx/s * 0.2;
+            double yaw      = 0; //Imu.get_st_err(angle, kt);
 
-            double lfp      = axial + lateral + yaw;
-            double rfp      = axial - lateral - yaw;
-            double lbp      = axial - lateral + yaw;
-            double rbp      = axial + lateral - yaw;
+            double lfp = axial + lateral + yaw;
+            double rfp = axial - lateral - yaw;
+            double lbp = axial - lateral + yaw;
+            double rbp = axial + lateral - yaw;
 
             wb.setMPower(rbp, rfp, lfp, lbp);
 
@@ -166,6 +167,7 @@ public class RobotBuild extends Robot {
                                                             Imu.getTurnAngle(), angle);
             telemetry.addData("Stable error", "%4f",
                                                 Imu.get_st_err(angle, kt));
+            telemetry.addData("ALY: ", "%4f, %4f, %4f", axial, lateral, yaw);
             telemetry.update();
         }
     }

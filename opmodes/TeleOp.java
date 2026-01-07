@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Camera;
@@ -16,8 +17,9 @@ import java.lang.Math;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
     Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-    boolean st45_lt, st45_rt, flag;
-    double axial, lateral, yaw;
+    ElapsedTime runtime = new ElapsedTime();
+    boolean st45_lt, st45_rt, flag, shoot;
+    double axial, lateral, yaw, shoot_time, min_speed = 1600;
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -36,15 +38,7 @@ public class TeleOp extends LinearOpMode {
         while(opModeIsActive()){
             //cam.telemetryAprilTag();
 
-            boolean bmp_rt = gamepad2.right_bumper;
-            if((cannon.get_shooter_vel() > 0.95 || bmp_rt) && flag){
-                r.delay(1000);
-                cannon.srv1_control(0);
-                flag = false;
-            } else{
-                cannon.srv1_control(80);
-                flag = true;
-            }
+
             //Нажата кнопка B - стабилизация 90 грд
 
             double x = -gamepad1.left_stick_x;
@@ -102,7 +96,7 @@ public class TeleOp extends LinearOpMode {
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad2.left_stick_y);
+            cannon.fw_control(gamepad2.left_stick_y, 1600);
             cannon.bw_control(gamepad2.right_stick_y);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);

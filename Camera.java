@@ -35,11 +35,12 @@ public class Camera {
     AprilTagProcessor aprilTag;
 
     VisionPortal visionPortal;
+    double[] shift = {-40, -380, -2};
     private void initAprilTag() {
-        double fx = 1484.97327503;
-        double fy = 1483.93259713;
-        double cx = 963.66059811;
-        double cy = 536.4853148;
+        double fx = 1447.20666452;
+        double fy = 1445.36496334;
+        double cx = 938.27422;
+        double cy = 596.46596293;
 
         aprilTag = new AprilTagProcessor.Builder()
                 //.setCameraPose(cameraPosition, cameraOrientation)
@@ -65,7 +66,6 @@ public class Camera {
     }
     @SuppressLint("DefaultLocale")
     public void telemetryAprilTag() {
-        double[] shift = {0, 0, 0};
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
         for (AprilTagDetection detection : currentDetections) {
@@ -95,7 +95,6 @@ public class Camera {
         telemetry.update();
     }
     public double[] get_position(){
-        double[] shift = {0, 0, 0};
         double x = 0, y = 0, z = 0;
         double p = 0, r = 0, yaw = 0;
         double id = 0;

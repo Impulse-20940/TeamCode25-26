@@ -40,6 +40,11 @@ public class Wheelbase {
         lb = hardwareMap.get(DcMotor.class, "lb");
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void reset_encoders(){
         lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

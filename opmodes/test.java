@@ -23,16 +23,19 @@ public class test extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
         IMU imu = new IMU();
-        //Cannon cannon = new Cannon();
+        Cannon cannon = new Cannon();
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, cam, wheel, this);
+                gamepad2, imu, cannon, cam, wheel, this);
         cam.set_processor();
+        wheel.telemetry_ports();
         waitForStart();
         while (opModeIsActive()) {
             double[] pos = cam.get_position();
             telemetry.addData("Now is ", "%4f, %4f, %4f, %4f", pos[1], pos[2], pos[3], pos[6]);
+            telemetry.addData("Shooter velocity: ", cannon.get_shooter_vel());
+            telemetry.addData("Position is ", wheel.get_enc_pos());
             telemetry.update();
         }
         cam.stop_stream();
