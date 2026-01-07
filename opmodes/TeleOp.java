@@ -16,7 +16,6 @@ import java.lang.Math;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
-    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
     ElapsedTime runtime = new ElapsedTime();
     boolean st45_lt, st45_rt, flag, shoot;
     double axial, lateral, yaw, shoot_time, min_speed = 1600;
@@ -41,8 +40,8 @@ public class TeleOp extends LinearOpMode {
 
             //Нажата кнопка B - стабилизация 90 грд
 
-            double x = -gamepad1.left_stick_x;
-            double y = gamepad1.left_stick_y;
+            double x =  gamepad1.left_stick_x * (1 - gamepad1.right_trigger);
+            double y = -gamepad1.left_stick_y * (1 - gamepad1.right_trigger);
 
             double deg = imu.getTurnAngle();
             double l_alpha = 90 + deg;
@@ -59,8 +58,8 @@ public class TeleOp extends LinearOpMode {
                 if(flag){
                     st45_rt = !st45_rt;
                     st45_lt = false;
+                    flag = false;
                 }
-                flag = false;
             } else flag = true;
 
             boolean btn_x = gamepad1.x;
@@ -68,8 +67,8 @@ public class TeleOp extends LinearOpMode {
                 if(flag){
                     st45_lt = !st45_lt;
                     st45_rt = false;
+                    flag = false;
                 }
-                flag = false;
             } else flag = true;
 
             boolean btn_a = gamepad1.a;
@@ -80,9 +79,9 @@ public class TeleOp extends LinearOpMode {
 
             // Проверка стабизизации
             if(st45_lt){
-                yaw = imu.get_st_err(-45, 0.012);
+                yaw = imu.get_st_err(45, 0.01);
             } else if (st45_rt){
-                yaw = imu.get_st_err(45, 0.012);
+                yaw = imu.get_st_err(-45, 0.01);
             }else { //without head
                 yaw = gamepad1.right_stick_x;
 

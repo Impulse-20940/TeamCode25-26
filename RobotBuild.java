@@ -152,7 +152,7 @@ public class RobotBuild extends Robot {
 
             double axial    = sy/s * 0.2;
             double lateral  = sx/s * 0.2;
-            double yaw      = 0; //Imu.get_st_err(angle, kt);
+            double yaw      = Imu.get_st_err(angle, kt);
 
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;
@@ -170,5 +170,7 @@ public class RobotBuild extends Robot {
             telemetry.addData("ALY: ", "%4f, %4f, %4f", axial, lateral, yaw);
             telemetry.update();
         }
+        wb.setMPower(0, 0, 0, 0);
+        wb.setZPB();
     }
 }

@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Cannon {
-    ElapsedTime runtime;
+    ElapsedTime runtime = new ElapsedTime();
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;
@@ -40,12 +40,10 @@ public class Cannon {
         this.srv1 = hardwareMap.get(Servo.class, "s1");
         //c2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-//    public void cannon_control(double power){
-//        c2.setPower(power);
-//    }
     public void fw_control(double power, double min_speed){
-        fw.setPower(power);
+        fw.setPower(-power);
         boolean bmp_rt = gamepad2.right_bumper;
+        telemetry.addData("Velocity: ", get_shooter_vel());
         if(get_shooter_vel() > min_speed || bmp_rt){
             if(!shoot){
                 srv1_control(0);
@@ -61,14 +59,18 @@ public class Cannon {
             srv1_control(80);
             shoot = false;
         }
+        telemetry.update();
     }
     public void bw_control(double power){
-        bw.setPower(power);
+        bw.setPower(-power);
     }
     public void srv1_control(double pos){
         srv1.setPosition(pos);
     }
     public double get_shooter_vel(){
         return fw.getVelocity();
+    }
+    public double get_srv_pos(){
+        return srv1.getPosition();
     }
 }

@@ -23,12 +23,22 @@ public class test_auto extends LinearOpMode {
         Camera cam = new Camera();
         //Cannon cannon = new Cannon();
         R.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, null, null, cam, null, this);
+                gamepad2, null, null, null, wheel, this);
         waitForStart();
+        /*
         cam.set_processor();
         while(opModeIsActive()){
             cam.telemetryAprilTag();
         }
         cam.stop_stream();
+         */
+        wheel.telemetry_ports();
+        //wheel.reset_encoders();
+        while(opModeIsActive()){
+            wheel.setMPower(0, 0.2,0, 0);
+            telemetry.addData("Enc pos ", wheel.get_enc_pos());
+            wheel.telemetry_power();
+            telemetry.update();
+        }
     }
 }

@@ -21,7 +21,7 @@ public class Robot {
     public Gamepad gamepad2;
     public LinearOpMode L;
     public ElapsedTime runtime;
-    public DcMotor rf;
+    public DcMotorEx rf;
     public DcMotor rb;
     public DcMotor lf;
     public DcMotor lb;

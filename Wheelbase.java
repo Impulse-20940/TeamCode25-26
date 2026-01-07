@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,13 +18,13 @@ public class Wheelbase {
     Gamepad gamepad2;
     LinearOpMode L;
     ElapsedTime runtime;
-    DcMotor rf;
+    DcMotorEx rf;
     DcMotor rb;
     DcMotor lf;
     DcMotor lb;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             DcMotor RF, DcMotor RB, DcMotor LF, DcMotor LB,
+                             DcMotorEx RF, DcMotor RB, DcMotor LF, DcMotor LB,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
@@ -34,21 +35,16 @@ public class Wheelbase {
         this.lf = LF;
         this.lb = LB;
         this.L = L;
-        rf = hardwareMap.get(DcMotor.class, "rf");
-        rb = hardwareMap.get(DcMotor.class, "rb");
+        rb = hardwareMap.get(DcMotor.class, "rf");
+        rf = hardwareMap.get(DcMotorEx.class, "rb");
         lf = hardwareMap.get(DcMotor.class, "lf");
         lb = hardwareMap.get(DcMotor.class, "lb");
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rf.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rb.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void reset_encoders(){
-        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
     public void setMPower(double RB, double RF, double LF, double LB){
         rf.setPower(RF);
@@ -63,7 +59,7 @@ public class Wheelbase {
         rb.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public double get_enc_pos(){
-        return lf.getCurrentPosition();
+        return rf.getCurrentPosition();
     }
     public void telemetry_ports(){
         telemetry.addData("RF is in", rf.getPortNumber());

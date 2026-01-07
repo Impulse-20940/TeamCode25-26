@@ -16,13 +16,8 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 @Config
 @Autonomous(name = "Main_Autonomous")
 public class Auto extends LinearOpMode {
-    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
-    ElapsedTime runtime;
-    public static double x;
-    public static double y;
-
-    public static double x1;
-    public static double y1;
+    //Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() {
         RobotBuild r = new RobotBuild();
@@ -31,18 +26,24 @@ public class Auto extends LinearOpMode {
         Cannon cannon = new Cannon();
         IMU imu = new IMU();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, cam, wheel, this);
+                gamepad2, imu, cannon, cam, wheel, this);
 
         wheel.reset_encoders();
         waitForStart();
 
         cam.set_processor();
-        r.move_xy(0, 0, 0, 60, 0, 1, 0.006);
+        r.move_xy(0, 0, 0, -35, 0, 1, 0.014);
 
         runtime.reset();
-        while (runtime.milliseconds() < 4000){
-            cannon.fw_control(1, 1600);
+        while (true){
+            cannon.fw_control(-1, 1500); //1600
+            cannon.bw_control(-1);
+            if(cannon.get_srv_pos() == 0){
+                r.delay(2000);
+                break;
+            }
         }
+        cannon.bw_control(0);
         cannon.fw_control(0, 1600);
 
         cam.telemetryAprilTag();

@@ -55,7 +55,7 @@ public class IMU {
         return angles.firstAngle;
     }
     public double get_st_err(double stable, double kt) {
-        return (stable-getTurnAngle())*kt;
+        return -(stable-getTurnAngle())*kt;
     }
     public void calibrate_imu(){
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
