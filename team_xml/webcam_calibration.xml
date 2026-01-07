@@ -54,9 +54,9 @@
     <Camera vid="Microsoft" pid="0x0772">
         <Calibration
             size="640 480"
-            focalLength="678.154f, 678.17f"
-            principalPoint="318.135f, 228.374f"
-            distortionCoefficients="-0.00953666f,  0.13514511f,  0.00406384f,  0.00272447f, -0.25181217f"
+            focalLength="1447.20666452f, 1445.36496334"
+            principalPoint="938.27422f, 596.46596293"
+            distortionCoefficients="0.03294309f, -0.19287014f, 0.00751513f, -0.00641482f, 0.3572788f"
         />
     </Camera>
     <!-- ======================================================================================= -->

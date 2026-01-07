@@ -36,7 +36,7 @@ public class Auto extends LinearOpMode {
 
         runtime.reset();
         while (true){
-            cannon.fw_control(-1, 1500); //1600
+            cannon.fw_control(-1, 1600); //1600
             cannon.bw_control(-1);
             if(cannon.get_srv_pos() == 0){
                 r.delay(2000);
