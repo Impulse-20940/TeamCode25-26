@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RobotBuild extends Robot {
+    public double alliance;
     public void init(HardwareMap hardwareMap, Telemetry telemetry,
                      Gamepad gamepad1, Gamepad gamepad2, IMU Imu, Cannon cnn,
                      Camera cam, Wheelbase wheel, LinearOpMode L) {
@@ -84,11 +85,11 @@ public class RobotBuild extends Robot {
         wb.setZPB();
     }
 
-    public void turn(double grd, double kt) {//Функция поворота
+    public void turn(double grd, double kt, double time) {//Функция поворота
         double yaw;
         runtime.reset();
 
-        while (L.opModeIsActive() && runtime.milliseconds() < 1000) {
+        while (L.opModeIsActive() && runtime.milliseconds() < time) {
             //Вычисление угла стабилизации
             yaw = Imu.get_st_err(grd, kt);
             //Вычисление мощности
@@ -133,7 +134,8 @@ public class RobotBuild extends Robot {
 
 
 
-    public void move_xy(double x, double x1, double y, double y1, double angle, double kp, double kt){
+    public void move_xy(double x, double x1, double y, double y1, double angle, double kp, double kt,
+                                                                                        double speed){
         wb.reset_encoders();
         double tic_per_cm  = 30.458/480;
         x1                  /= tic_per_cm;
@@ -147,11 +149,17 @@ public class RobotBuild extends Robot {
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
         while(Math.abs(wb.get_enc_pos()) < s && L.opModeIsActive()) {
+            double[] detect = cam.get_position();
+            telemetry.addData("Detected id: ", detect[7]);
+            if(detect[7] != 0){
+                alliance = detect[7];
+            }
+
             double error = s - Math.abs(wb.get_enc_pos());
             double p = error * kp;
 
-            double axial    = sy/s * 0.2;
-            double lateral  = sx/s * 0.2;
+            double axial    = sy/s * speed;
+            double lateral  = sx/s * speed;
             double yaw      = Imu.get_st_err(angle, kt);
 
             double lfp = axial + lateral + yaw;

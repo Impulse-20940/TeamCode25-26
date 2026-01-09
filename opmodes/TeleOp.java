@@ -58,8 +58,8 @@ public class TeleOp extends LinearOpMode {
                 if(flag){
                     st45_rt = !st45_rt;
                     st45_lt = false;
-                    flag = false;
                 }
+                flag = false;
             } else flag = true;
 
             boolean btn_x = gamepad1.x;
@@ -67,8 +67,8 @@ public class TeleOp extends LinearOpMode {
                 if(flag){
                     st45_lt = !st45_lt;
                     st45_rt = false;
-                    flag = false;
                 }
+                flag = false;
             } else flag = true;
 
             boolean btn_a = gamepad1.a;
