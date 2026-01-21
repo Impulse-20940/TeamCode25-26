@@ -39,7 +39,9 @@ public class Wheelbase {
     }
     public void reset_encoders(){
         rf.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        lb.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rf.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        lb.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
     public void setMPower(double RB, double RF, double LF, double LB){
         rf.setPower(RF);

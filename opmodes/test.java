@@ -19,6 +19,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="test_TeleOp")
 public class test extends LinearOpMode {
     Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    double angle;
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -28,15 +29,22 @@ public class test extends LinearOpMode {
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
                 gamepad2, imu, cannon, cam, wheel, this);
+
         cam.set_processor();
         wheel.telemetry_ports();
+        wheel.reset_encoders();
+
         waitForStart();
         while (opModeIsActive()) {
             double[] pos = cam.get_position();
-            telemetry.addData("Now is (PRY)", "%4f, %4f, %4f, %4f", pos[4], pos[5], pos[6]);
+            if(pos[6] != 0){
+                angle = pos[6] - 135;
+            }
+            telemetry.addData("Now is ", angle);
             telemetry.addData("Position is ", wheel.get_enc_pos());
             telemetry.addData("Position_left is ", wheel.get_enc_pos_res());
             telemetry.update();
+            r.turn(angle, 0.012, 1);
         }
         cam.stop_stream();
 
