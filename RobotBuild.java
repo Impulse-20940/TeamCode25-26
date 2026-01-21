@@ -20,20 +20,24 @@ public class RobotBuild extends Robot {
         this.runtime = new ElapsedTime();
         if (Imu != null) {
             this.Imu = Imu;
-            Imu.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
+            Imu.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.imu, L);
         }
         if (cnn != null) {
             this.cnn = cnn;
-            cnn.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
+            cnn.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.fw, this.c2, L, srv1);
         }
         if (cam != null) {
             this.cam = cam;
-            cam.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
+            cam.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.visionPortal, this.aprilTag, L);
         }
 
         if (wheel != null) {
             this.wb = wheel;
-            wheel.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
+            wheel.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
+                    this.rf, this.rb, this.lf, this.lb, L);
         }
     }
 
@@ -144,8 +148,7 @@ public class RobotBuild extends Robot {
 
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
-        while((Math.abs(wb.get_enc_pos()) < s && Math.abs(wb.get_enc_pos_res()) < s)
-                                                        && L.opModeIsActive()) {
+        while(Math.abs(wb.get_enc_pos()) < s && L.opModeIsActive()) {
             double[] detect = cam.get_position();
             telemetry.addData("Detected id: ", detect[7]);
             if(detect[7] != 0){
