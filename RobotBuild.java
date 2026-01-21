@@ -20,24 +20,20 @@ public class RobotBuild extends Robot {
         this.runtime = new ElapsedTime();
         if (Imu != null) {
             this.Imu = Imu;
-            Imu.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
-                    this.imu, L);
+            Imu.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
         }
         if (cnn != null) {
             this.cnn = cnn;
-            cnn.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
-                    this.fw, this.c2, L, srv1);
+            cnn.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
         }
         if (cam != null) {
             this.cam = cam;
-            cam.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
-                    this.visionPortal, this.aprilTag, L);
+            cam.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
         }
 
         if (wheel != null) {
             this.wb = wheel;
-            wheel.init_classes(hardwareMap, telemetry, gamepad1, gamepad2,
-                    this.rf, this.rb, this.lf, this.lb, L);
+            wheel.init_classes(hardwareMap, telemetry, gamepad1, gamepad2, L);
         }
     }
 
