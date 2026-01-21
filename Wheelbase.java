@@ -21,24 +21,19 @@ public class Wheelbase {
     DcMotorEx rf;
     DcMotor rb;
     DcMotor lf;
-    DcMotor lb;
+    DcMotorEx lb;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             DcMotorEx RF, DcMotor RB, DcMotor LF, DcMotor LB,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
-        this.rf = RF;
-        this.rb = RB;
-        this.lf = LF;
-        this.lb = LB;
         this.L = L;
         rb = hardwareMap.get(DcMotor.class, "rf");
         rf = hardwareMap.get(DcMotorEx.class, "rb");
         lf = hardwareMap.get(DcMotor.class, "lf");
-        lb = hardwareMap.get(DcMotor.class, "lb");
+        lb = hardwareMap.get(DcMotorEx.class, "lb");
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
     }
@@ -60,6 +55,9 @@ public class Wheelbase {
     }
     public double get_enc_pos(){
         return rf.getCurrentPosition();
+    }
+    public double get_enc_pos_res(){
+        return lb.getCurrentPosition();
     }
     public void telemetry_ports(){
         telemetry.addData("RF is in", rf.getPortNumber());

@@ -33,9 +33,9 @@ public class test extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             double[] pos = cam.get_position();
-            telemetry.addData("Now is ", "%4f, %4f, %4f, %4f", pos[1], pos[2], pos[3], pos[6]);
-            telemetry.addData("Shooter velocity: ", cannon.get_shooter_vel());
+            telemetry.addData("Now is (PRY)", "%4f, %4f, %4f, %4f", pos[4], pos[5], pos[6]);
             telemetry.addData("Position is ", wheel.get_enc_pos());
+            telemetry.addData("Position_left is ", wheel.get_enc_pos_res());
             telemetry.update();
         }
         cam.stop_stream();

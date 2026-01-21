@@ -120,15 +120,12 @@ public class Camera {
         return pos;
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             VisionPortal visionPortal, AprilTagProcessor aprilTag,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.L = L;
-        this.visionPortal = visionPortal;
-        this.aprilTag = aprilTag;
         initAprilTag();
     }
 }

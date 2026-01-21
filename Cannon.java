@@ -25,16 +25,12 @@ public class Cannon {
     public double shoot_time;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
-                             DcMotorEx FW, DcMotor BW,
-                             LinearOpMode L, Servo SRV1){
+                             LinearOpMode L){
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.L = L;
-        this.fw = FW;
-        this.bw = BW;
-        this.srv1 = SRV1;
         this.fw = hardwareMap.get(DcMotorEx.class, "c1");
         this.bw = hardwareMap.get(DcMotor.class, "c2");
         this.srv1 = hardwareMap.get(Servo.class, "s1");

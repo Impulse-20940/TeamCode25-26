@@ -36,8 +36,6 @@ public class TeleOp extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             //cam.telemetryAprilTag();
-
-
             //Нажата кнопка B - стабилизация 90 грд
 
             double x =  gamepad1.left_stick_x * (1 - gamepad1.right_trigger);

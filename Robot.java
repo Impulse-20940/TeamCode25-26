@@ -21,16 +21,6 @@ public class Robot {
     public Gamepad gamepad2;
     public LinearOpMode L;
     public ElapsedTime runtime;
-    public DcMotorEx rf;
-    public DcMotor rb;
-    public DcMotor lf;
-    public DcMotor lb;
-    public DcMotor c2;
-    public DcMotorEx fw;
-    public BNO055IMU imu;
-    public VisionPortal visionPortal;
-    public AprilTagProcessor aprilTag;
-    public Servo srv1;
     IMU Imu;
     Wheelbase wb;
     Cannon cnn;
