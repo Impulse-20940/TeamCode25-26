@@ -101,13 +101,51 @@ public class RobotBuild extends Robot {
         }
         wb.setZPB();
     }
+    public void stable_camera(double kt, double time) {//Функция поворота
+        double yaw;
+        runtime.reset();
+        while (L.opModeIsActive() && runtime.milliseconds() < time) {
+            double[] detect = cam.get_position();
+            //Вычисление угла стабилизации
+            yaw = -(45 - detect[6]) * kt;
+            //Вычисление мощности
+            double lfp = (+yaw);
+            double rfp = (-yaw);
+            double lbp = (+yaw);
+            double rbp = (-yaw);
+            double grd_tel = Imu.getTurnAngle();
 
+            wb.setMPower(rbp, rfp, lfp, lbp);
+            telemetry.addData("Now is (degrees):", "%4f", grd_tel);
+            telemetry.update();
+        }
+    }
+    public void turn_simple(double grd, double angle, double kt, double time) {//Функция поворота
+        double yaw;
+        runtime.reset();
+
+        while (L.opModeIsActive() && runtime.milliseconds() < time) {
+            //Вычисление угла стабилизации
+            yaw = (grd-angle) * kt;
+            //Вычисление мощности
+            double lfp = (+yaw);
+            double rfp = (-yaw);
+            double lbp = (+yaw);
+            double rbp = (-yaw);
+            double grd_tel = Imu.getTurnAngle();
+
+            wb.setMPower(rbp, rfp, lfp, lbp);
+            telemetry.addData("Now is (degrees):", "%4f", grd_tel);
+            telemetry.update();
+        }
+        wb.setZPB();
+    }
     public void fd(double cm, double kp){//Функция проезда вперёд
         wb.reset_encoders();
         double tic_per_cm = (12.36/480)*2.54;//коэф перевода из тиков в сантиметры
         double ang        = Imu.getTurnAngle();
         double axial = 1;
-        while (Math.abs(wb.get_enc_pos())*tic_per_cm*1.4 < cm){
+        while (Math.abs(wb.get_enc_pos()) * tic_per_cm * 1.4 < cm){
             double err = cm-(wb.get_enc_pos()*tic_per_cm);//Формирование ошибки
 
             double p = err * kp * -1;           //Коэф пропорциональности
@@ -130,8 +168,8 @@ public class RobotBuild extends Robot {
 
 
 
-    public void move_xy(double x, double x1, double y, double y1, double angle, double kp, double kt,
-                                                                                        double speed){
+    public void move_xy(double x, double x1, double y, double y1, double angle,
+                                                double kp, double kt, double speed){
         wb.reset_encoders();
         double tic_per_cm  = 30.458/480;
         x1                  /= tic_per_cm;
@@ -144,18 +182,19 @@ public class RobotBuild extends Robot {
 
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
-        while(Math.abs(wb.get_enc_pos()) < s && L.opModeIsActive()) {
+        while((Math.abs(wb.get_enc_pos()) < s && Math.abs(wb.get_enc_pos_res()) < s) && L.opModeIsActive()) {
             double[] detect = cam.get_position();
             telemetry.addData("Detected id: ", detect[7]);
             if(detect[7] != 0){
                 alliance = detect[7];
             }
 
-            double error = s - Math.abs(wb.get_enc_pos());
-            double p = error * kp;
+            //double error = s - Math.abs(wb.get_enc_pos());
+            //double d = wb.get_motor_speed() * kd;
+            //double p = error * kp;
 
-            double axial    = sy/s * speed;
-            double lateral  = sx/s * speed;
+            double axial    = sy/s * speed;// * p; //+ d;
+            double lateral  = sx/s * speed;// * p; //+ d;
             double yaw      = Imu.get_st_err(angle, kt);
 
             double lfp = axial + lateral + yaw;

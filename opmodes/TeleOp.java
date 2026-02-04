@@ -36,8 +36,6 @@ public class TeleOp extends LinearOpMode {
         waitForStart();
         while(opModeIsActive()){
             //cam.telemetryAprilTag();
-            //Нажата кнопка B - стабилизация 90 грд
-
             double x =  gamepad1.left_stick_x * (1 - gamepad1.right_trigger);
             double y = -gamepad1.left_stick_y * (1 - gamepad1.right_trigger);
 
@@ -51,13 +49,14 @@ public class TeleOp extends LinearOpMode {
             axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
             lateral = x * Math.sin(l_rads) + y * Math.cos(a_rads);
 
+            //Нажата кнопка B - стабилизация 90 грд
             boolean btn_b = gamepad1.b;
             if(btn_b){
                 if(flag){
                     st45_rt = !st45_rt;
                     st45_lt = false;
+                    flag = false;
                 }
-                flag = false;
             } else flag = true;
 
             boolean btn_x = gamepad1.x;
@@ -65,8 +64,8 @@ public class TeleOp extends LinearOpMode {
                 if(flag){
                     st45_lt = !st45_lt;
                     st45_rt = false;
+                    flag = false;
                 }
-                flag = false;
             } else flag = true;
 
             boolean btn_a = gamepad1.a;
@@ -81,13 +80,13 @@ public class TeleOp extends LinearOpMode {
             } else if (st45_rt){
                 yaw = imu.get_st_err(-45, 0.01);
             }else { //without head
-                yaw = gamepad1.right_stick_x;
+                yaw = gamepad1.right_stick_x * 0.85;
 
                 telemetry.addData("Axial is", axial);
                 telemetry.addData("Lateral is", lateral);
                 telemetry.addData("Yaw is", yaw);
                 telemetry.addData("Shooter velocity", cannon.get_shooter_vel());
-           }
+            }
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;
             double lbp = axial - lateral + yaw;

@@ -21,10 +21,32 @@ public class test_auto extends LinearOpMode {
         IMU imu = new IMU();
         Wheelbase wheel = new Wheelbase();
         Camera cam = new Camera();
-        //Cannon cannon = new Cannon();
+        Cannon cannon = new Cannon();
         R.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, cam, wheel, this);
+                gamepad2, imu, cannon, cam, wheel, this);
         waitForStart();
-        R.turn(-135, 0.008, 2000);
+        cannon.srv1_control(80);
+        cannon.bw_control(1);
+        R.move_xy(0, 0, 0, -40, 0, 1, 0.006, 0.08);
+        cannon.bw_control(-1);
+        R.delay(5);
+        cannon.bw_control(0);
+        while (true){
+            cannon.fw_control(-1, 1600);
+            if(cannon.get_srv_pos() == 0){
+                R.delay(2000);
+                break;
+            }
+        }
+        cannon.srv1_control(120);
+        cannon.bw_control(-1);
+        R.delay(4000);
+        while (true){
+            cannon.fw_control(-1, 1600);
+            if(cannon.get_srv_pos() == 0){
+                R.delay(2000);
+                break;
+            }
+        }
     }
 }

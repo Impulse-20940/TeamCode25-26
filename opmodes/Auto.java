@@ -30,9 +30,8 @@ public class Auto extends LinearOpMode {
 
         wheel.reset_encoders();
         waitForStart();
-
         cam.set_processor();
-        r.move_xy(0, 0, 0, -40, 0, 1, 0.014, 0.2);
+        r.move_xy(0, 0, 0, -40, 0, 0, 0.006, 0.08);
 
         runtime.reset();
         while (true){
@@ -45,28 +44,27 @@ public class Auto extends LinearOpMode {
         }
         cannon.bw_control(0);
         cannon.fw_control(0, 1600);
-        cannon.srv1_control(80);
-
-        r.move_xy(0, 0, 0, -35 - 40, 0, 1, 0.012, 0.3); //-35
+        cannon.srv1_control(120);
+        r.move_xy(0, 0, 0, -35 - 40, 0, 1, 0.004, 0.18); //-35
         r.delay(500);
-        r.move_xy(0, 0, 0, 40, 0, 1, 0.025, 0.2); //-35
+        r.move_xy(0, 0, 0, 40, 0, 1, 0.005, 0.18); //-35
         r.delay(500);
 
         if(r.alliance == 20){// Определение альянса
             r.stable(0, 0, -135, 2000, 0.0027);
-            r.move_xy(0, 15, 0, -30, -135, 1, 0.012, 0.2); //-10
+            r.move_xy(0, 15, 0, -30, -135, 1, 0.004, 0.18); //-10
             cannon.bw_control(-1);
-            r.move_xy(0, 0, 0, -10, -135, 1, 0.012, 0.15);
+            r.move_xy(0, 0, 0, -20, -135, 1, 0.004, 0.18);
             r.delay(500);
             cannon.bw_control(0);
 
             //********После заброса
-            r.move_xy(0, 0, 0, 10, -135, 1, 0.012, 0.1);
-            r.move_xy(0, -42, 0, 42, -135, 1, 0.012, 0.3); //-10
+            r.move_xy(0, 0, 0, 10, -135, 1, 0.004, 0.18);
+            r.move_xy(0, -42, 0, 42, -135, 1, 0.004, 0.18); //-10
             r.turn(0, 0.007, 1200);
             //r.delay(500);
 
-            r.move_xy(0, 0, 0, 30, 0, 1, 0.012, 0.3); //-35
+            r.move_xy(0, 0, 0, 30, 0, 1, 0.004, 0.18); //-35
             runtime.reset();
             while (true){
                 cannon.fw_control(-1, 1600);
@@ -82,19 +80,19 @@ public class Auto extends LinearOpMode {
             cam.stop_stream();
         }else if (r.alliance == 24){
             r.stable(0, 0, 135, 2000, 0.0027);
-            r.move_xy(0, -15, 0, -16, 135, 1, 0.012, 0.5); //-10
+            r.move_xy(0, -15, 0, -30, 135, 1, 0.004, 0.18); //-10
             cannon.bw_control(-1);
-            r.move_xy(0, 0, 0, -18, 135, 1, 0.012, 0.2);
+            r.move_xy(0, 0, 0, -20, 135, 1, 0.004, 0.18);
             r.delay(500);
             cannon.bw_control(0);
 
             //********После заброса
-            r.move_xy(0, 0, 0, 10, 135, 1, 0.012, 0.1);
-            r.move_xy(0, 10, 0, 5, 135, 1, 0.012, 0.5); //-10
+            r.move_xy(0, 0, 0, 10, 135, 1, 0.004, 0.18);
+            r.move_xy(0, 5, 0, 30, 135, 1, 0.004, 0.18); //-10
             r.turn(10, 0.012, 1400);
             //r.delay(500);
 
-            r.move_xy(0, 0, 0, 30, 10, 1, 0.02, 0.3); //-35
+            r.move_xy(0, 0, 0, 30, 10, 1, 0.004, 0.18); //-35
             runtime.reset();
             while (true){
                 cannon.fw_control(-1, 1600);

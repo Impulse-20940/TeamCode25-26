@@ -20,6 +20,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 public class test extends LinearOpMode {
     Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
     double angle;
+    double angle_m;
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -33,18 +34,32 @@ public class test extends LinearOpMode {
         cam.set_processor();
         wheel.telemetry_ports();
         wheel.reset_encoders();
-
+        double cnt = 0;
         waitForStart();
         while (opModeIsActive()) {
             double[] pos = cam.get_position();
-            if(pos[6] != 0){
-                angle = pos[6] - 135;
+            if(pos[6] != 0 && cnt < 10){
+                angle_m += pos[6];
+                cnt += 1;
+            } else if (cnt == 10){
+                cnt = 0;
+                angle = angle_m / 10;
+                angle_m = 0;
             }
-            telemetry.addData("Now is ", angle);
+            telemetry.addData("Now is ", -45 + angle);
             telemetry.addData("Position is ", wheel.get_enc_pos());
             telemetry.addData("Position_left is ", wheel.get_enc_pos_res());
             telemetry.update();
-            r.turn(angle, 0.012, 1);
+            if(angle > 0){
+                double yaw = (-45+angle) * 0.01;
+                //Вычисление мощности
+                double lfp = (+yaw);
+                double rfp = (-yaw);
+                double lbp = (+yaw);
+                double rbp = (-yaw);
+
+                wheel.setMPower(rbp, rfp, lfp, lbp);
+            }
         }
         cam.stop_stream();
 

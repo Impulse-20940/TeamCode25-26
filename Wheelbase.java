@@ -18,10 +18,10 @@ public class Wheelbase {
     Gamepad gamepad2;
     LinearOpMode L;
     ElapsedTime runtime;
-    DcMotorEx rf;
+    DcMotor rf;
     DcMotor rb;
     DcMotor lf;
-    DcMotorEx lb;
+    DcMotor lb;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              LinearOpMode L){
@@ -31,17 +31,17 @@ public class Wheelbase {
         this.gamepad2 = gamepad2;
         this.L = L;
         rb = hardwareMap.get(DcMotor.class, "rf");
-        rf = hardwareMap.get(DcMotorEx.class, "rb");
+        rf = hardwareMap.get(DcMotor.class, "rb");
         lf = hardwareMap.get(DcMotor.class, "lf");
-        lb = hardwareMap.get(DcMotorEx.class, "lb");
+        lb = hardwareMap.get(DcMotor.class, "lb");
         lb.setDirection(DcMotorSimple.Direction.REVERSE);
         lf.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void reset_encoders(){
-        rf.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        lb.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        rf.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        lb.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     public void setMPower(double RB, double RF, double LF, double LB){
         rf.setPower(RF);
