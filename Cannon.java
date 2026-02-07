@@ -40,22 +40,25 @@ public class Cannon {
         fw.setPower(-power);
         boolean bmp_rt = gamepad2.right_bumper;
         telemetry.addData("Velocity: ", get_shooter_vel());
-        if(get_shooter_vel() > min_speed || bmp_rt){
-            if(!shoot || bmp_rt){
-                srv1_control(0);
-                shoot_time = runtime.milliseconds();
-                shoot = true;
+        for(int i = 0; i < 3; i += 1) {
+            if (get_shooter_vel() > min_speed || bmp_rt) {
+                if (!shoot) {
+                    srv1_control(0);
+                    shoot_time = runtime.milliseconds();
+                    shoot = true;
+                }
+                if (runtime.milliseconds() - shoot_time > 1000) {
+                    srv1_control(80);
+                    telemetry.addData("Down", 0);
+                }
+                telemetry.addData("Runtime ", runtime.milliseconds() - shoot_time);
+            } else {
+                srv1_control(80);
+                shoot = false;
             }
-            if(runtime.milliseconds()-shoot_time > 1000){
-                srv1_control(120);
-                telemetry.addData("Down", 0);
-            }
-            telemetry.addData("Runtime ", runtime.milliseconds()-shoot_time);
-        } else{
-            srv1_control(120);
-            shoot = false;
+            telemetry.update();
+            Thread.yield();
         }
-        telemetry.update();
     }
     public void bw_control(double power){
         bw.setPower(-power);

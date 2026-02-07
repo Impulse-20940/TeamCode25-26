@@ -140,13 +140,13 @@ public class RobotBuild extends Robot {
         }
         wb.setZPB();
     }
-    public void fd(double cm, double kp){//Функция проезда вперёд
+    public void fd(double cm, double kp){     //Функция проезда вперёд
         wb.reset_encoders();
-        double tic_per_cm = (12.36/480)*2.54;//коэф перевода из тиков в сантиметры
+        double tic_per_cm = (12.36/480)*2.54;    //коэф перевода из тиков в сантиметры
         double ang        = Imu.getTurnAngle();
         double axial = 1;
         while (Math.abs(wb.get_enc_pos()) * tic_per_cm * 1.4 < cm){
-            double err = cm-(wb.get_enc_pos()*tic_per_cm);//Формирование ошибки
+            double err = cm-(wb.get_enc_pos()*tic_per_cm);   //Формирование ошибки
 
             double p = err * kp * -1;           //Коэф пропорциональности
             double yaw   = Imu.get_st_err(ang, 0.012);
