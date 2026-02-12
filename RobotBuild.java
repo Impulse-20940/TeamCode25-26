@@ -40,7 +40,7 @@ public class RobotBuild extends Robot {
     public void stable(double a, double l, double stable, long time, double kt) {
         runtime.reset();
         while (L.opModeIsActive() && runtime.milliseconds() < time) {
-            double getangle = stable - Imu.getTurnAngle();
+            double getangle = Imu.get_st_err(stable, kt);
             double axial = a;
             double lateral = l;
             double yaw = getangle * kt;
@@ -169,7 +169,7 @@ public class RobotBuild extends Robot {
 
 
     public void move_xy(double x, double x1, double y, double y1, double angle,
-                                                double kp, double kt, double speed){
+                                                        double kp, double kt){
         wb.reset_encoders();
         double tic_per_cm  = 30.458/480;
         x1                  /= tic_per_cm;
@@ -188,13 +188,13 @@ public class RobotBuild extends Robot {
             if(detect[7] != 0){
                 alliance = detect[7];
             }
+            double enc_value = Math.max(Math.abs(wb.get_enc_pos()),
+                                        Math.abs(wb.get_enc_pos_res()));
+            double error = s - enc_value;
+            double p = error * kp;
 
-            //double error = s - Math.abs(wb.get_enc_pos());
-            //double d = wb.get_motor_speed() * kd;
-            //double p = error * kp;
-
-            double axial    = sy/s * speed;// * p; //+ d;
-            double lateral  = sx/s * speed;// * p; //+ d;
+            double axial    = sy/s * p;
+            double lateral  = sx/s * p;
             double yaw      = Imu.get_st_err(angle, kt);
 
             double lfp = axial + lateral + yaw;
@@ -213,6 +213,7 @@ public class RobotBuild extends Robot {
             telemetry.addData("ALY: ", "%4f, %4f, %4f", axial, lateral, yaw);
             telemetry.update();
         }
+        stable(0, 0, angle, 200, 0.009);
         wb.setMPower(0, 0, 0, 0);
         wb.setZPB();
     }

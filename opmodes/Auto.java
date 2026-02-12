@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 @Config
 @Autonomous(name = "Main_Autonomous")
 public class Auto extends LinearOpMode {
-    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    MultipleTelemetry telemetry = new MultipleTelemetry();
     ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() {
@@ -31,83 +32,67 @@ public class Auto extends LinearOpMode {
         wheel.reset_encoders();
         waitForStart();
         cam.set_processor();
-        r.move_xy(0, 0, 0, -40, 0, 0, 0.006, 0.08);
-
-        runtime.reset();
-        while (true){
-            cannon.fw_control(-1, 1600);
-            cannon.bw_control(-1);
-            if(cannon.get_srv_pos() == 0){
-                r.delay(2000);
-                break;
-            }
-        }
+        //********************************************** s0
+        //______________________________________________ m1
+        r.move_xy(0, 0, 0, -40, 0, 0.001, 0.02);                //s0m1a1
+        while(cannon.get_shooter_vel() < 1600) cannon.fw.setPower(1);;
+        cannon.fw_control_np(-1);
+        //______________________________________________ m2
         cannon.bw_control(0);
-        cannon.fw_control(0, 1600);
-        cannon.srv1_control(120);
-        r.move_xy(0, 0, 0, -35 - 40, 0, 1, 0.004, 0.18); //-35
+        cannon.srv1_control(80);
+        r.move_xy(0, 0, 0, -35 - 30, 0, 0.001, 0.02);          //s0m2a1
         r.delay(500);
-        r.move_xy(0, 0, 0, 40, 0, 1, 0.005, 0.18); //-35
-        r.delay(500);
+        r.move_xy(0, 0, 0, 30, 0, 0.001, 0.02);                //s0m2a2
+        r.delay(200);
+        //______________________________________________
 
-        if(r.alliance == 20){// Определение альянса
-            r.stable(0, 0, -135, 2000, 0.0027);
-            r.move_xy(0, 15, 0, -30, -135, 1, 0.004, 0.18); //-10
+        //********************************************** s1
+        if(r.alliance == 20){
+            //__________________________________________ m1
+            r.stable(0, 0, 45, 2000, 0.0105);                        //s1m1a1
+            r.move_xy(0, -10, 0, 60, 45, 0.001, 0.02);         //s1m1a2
             cannon.bw_control(-1);
-            r.move_xy(0, 0, 0, -20, -135, 1, 0.004, 0.18);
+            r.move_xy(0, 0, 0, 20, 45, 0.001, 0.02);           //s1m1a3
             r.delay(500);
             cannon.bw_control(0);
 
-            //********После заброса
-            r.move_xy(0, 0, 0, 10, -135, 1, 0.004, 0.18);
-            r.move_xy(0, -42, 0, 42, -135, 1, 0.004, 0.18); //-10
-            r.turn(0, 0.007, 1200);
-            //r.delay(500);
+            //__________________________________________ m2
+            r.move_xy(0, 10, 0, -60, 45, 0.001, 0.02);        //s1m2a2
+            r.turn(0, 0.01, 1200);                                         //s1m2a3
+            r.delay(500);
 
-            r.move_xy(0, 0, 0, 30, 0, 1, 0.004, 0.18); //-35
-            runtime.reset();
-            while (true){
-                cannon.fw_control(-1, 1600);
-                cannon.bw_control(-1);
-                if(cannon.get_srv_pos() == 0){
-                    r.delay(2000);
-                    break;
-                }
-            }
+            //__________________________________________ m3
+            r.move_xy(0, 0, 0, 30, 0, 0.001, 0.02);           //s1m3a1
+            while(cannon.get_shooter_vel() < 1600) cannon.fw.setPower(1);;
+            cannon.fw_control_np(-1);
             cannon.bw_control(0);
-            cannon.fw_control(0, 1600);
             cannon.srv1_control(80);
             cam.stop_stream();
+            r.move_xy(0, 10, 0, 0, 0, 0.001, 0.02);
+        //********************************************** s2
         }else if (r.alliance == 24){
-            r.stable(0, 0, 135, 2000, 0.0027);
-            r.move_xy(0, -15, 0, -30, 135, 1, 0.004, 0.18); //-10
+            r.stable(0, 0, -45, 2000, 0.009);
+            r.move_xy(0, 15, 0, 30, -45, 0.001, 0.02);
             cannon.bw_control(-1);
-            r.move_xy(0, 0, 0, -20, 135, 1, 0.004, 0.18);
+            r.move_xy(0, 0, 0, -20, -45, 0.001, 0.02);
             r.delay(500);
             cannon.bw_control(0);
 
             //********После заброса
-            r.move_xy(0, 0, 0, 10, 135, 1, 0.004, 0.18);
-            r.move_xy(0, 5, 0, 30, 135, 1, 0.004, 0.18); //-10
-            r.turn(10, 0.012, 1400);
-            //r.delay(500);
+            r.move_xy(0, 0, 0, 10, -45, 0.001, 0.02);
+            r.move_xy(0, 5, 0, 30, -45, 0.001, 0.02);
+            r.turn(0, 0.012, 1400);
+            r.delay(500);
 
-            r.move_xy(0, 0, 0, 30, 10, 1, 0.004, 0.18); //-35
-            runtime.reset();
-            while (true){
-                cannon.fw_control(-1, 1600);
-                cannon.bw_control(-1);
-                if(cannon.get_srv_pos() == 0){
-                    r.delay(2000);
-                    break;
-                }
-            }
+            r.move_xy(0, 0, 0, 30, 0, 0.001, 0.02);
+            while(cannon.get_shooter_vel() < 1600) cannon.fw.setPower(1);;
+            cannon.fw_control_np(-1);
             cannon.bw_control(0);
-            cannon.fw_control(0, 1600);
             cannon.srv1_control(80);
             cam.stop_stream();
-
+            r.move_xy(0, 10, 0, 0, 0, 0.001, 0.02);
         }
+        //**********************************************
         cam.stop_stream();
     }
 }

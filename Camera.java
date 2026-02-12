@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.annotation.SuppressLint;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -55,12 +56,16 @@ public class Camera {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
         builder.addProcessor(aprilTag);
+        builder.enableLiveView(true);
+        builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
         visionPortal = builder.build();
     }
     public void set_processor(){
+        FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
         visionPortal.setProcessorEnabled(aprilTag, true);
     }
     public void stop_stream(){
+        FtcDashboard.getInstance().stopCameraStream();
         visionPortal.setProcessorEnabled(aprilTag, false);
         visionPortal.close();
     }

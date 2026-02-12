@@ -3,6 +3,7 @@ import android.opengl.Matrix;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,7 +19,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="test_TeleOp")
 public class test extends LinearOpMode {
-    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    MultipleTelemetry telemetry = new MultipleTelemetry();
     double angle;
     double angle_m;
     @Override

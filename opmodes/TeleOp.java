@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,9 +17,9 @@ import java.lang.Math;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
-    ElapsedTime runtime = new ElapsedTime();
-    boolean st45_lt, st45_rt, flag, shoot;
-    double axial, lateral, yaw, shoot_time, min_speed = 1600;
+    boolean st45_lt, st45_rt, flag;
+    double axial, lateral, yaw, min_speed = 1600;
+    MultipleTelemetry telemetry = new MultipleTelemetry();
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -35,9 +36,7 @@ public class TeleOp extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()){
-            //cam.telemetryAprilTag();
-            //Нажата кнопка B - стабилизация 90 грд
-
+            cam.telemetryAprilTag();
             double x =  gamepad1.left_stick_x * (1 - gamepad1.right_trigger);
             double y = -gamepad1.left_stick_y * (1 - gamepad1.right_trigger);
 
@@ -86,14 +85,14 @@ public class TeleOp extends LinearOpMode {
                 telemetry.addData("Axial is", axial);
                 telemetry.addData("Lateral is", lateral);
                 telemetry.addData("Yaw is", yaw);
-                telemetry.addData("Shooter velocity", cannon.get_shooter_vel());
+                //telemetry.addData("Shooter velocity", cannon.get_shooter_vel());
            }
             double lfp = axial + lateral + yaw;
             double rfp = axial - lateral - yaw;
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad2.left_stick_y, 1600);
+            cannon.fw_control(gamepad2.left_stick_y, min_speed);
             cannon.bw_control(gamepad2.right_stick_y);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
