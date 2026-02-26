@@ -184,9 +184,9 @@ public class RobotBuild extends Robot {
 
         while((Math.abs(wb.get_enc_pos()) < s && Math.abs(wb.get_enc_pos_res()) < s) && L.opModeIsActive()) {
             double[] detect = cam.get_position();
-            telemetry.addData("Detected id: ", detect[7]);
-            if(detect[7] != 0){
-                alliance = detect[7];
+            telemetry.addData("Detected id: ", detect[4]);
+            if(detect[4] != 0){
+                alliance = detect[4];
             }
             double enc_value = Math.max(Math.abs(wb.get_enc_pos()),
                                         Math.abs(wb.get_enc_pos_res()));
