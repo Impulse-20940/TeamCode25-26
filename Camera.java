@@ -29,14 +29,12 @@ public class Camera {
     LinearOpMode L;
     public static final boolean USE_WEBCAM = true;
     private final Position cameraPosition = new Position(DistanceUnit.INCH,
-            0, 0, 0, 0);
+            -5, 0, 0, 0);
     private final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
-            0, -90, 0, 0);
+            0, 20, 0, 0);
 
     AprilTagProcessor aprilTag;
-
     VisionPortal visionPortal;
-    double[] shift = {-40, -380, -2};
     private void initAprilTag() {
         double fx = 1447.20666452;
         double fy = 1445.36496334;
@@ -44,8 +42,8 @@ public class Camera {
         double cy = 596.46596293;
 
         aprilTag = new AprilTagProcessor.Builder()
-                //.setCameraPose(cameraPosition, cameraOrientation)
-                .setLensIntrinsics(fx, fy, cx, cy)
+                .setCameraPose(cameraPosition, cameraOrientation)
+                //.setLensIntrinsics(fx, fy, cx, cy)
                 .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
                 .build();
 
@@ -79,9 +77,9 @@ public class Camera {
                 // Only use tags that don't have Obelisk in them
                 if (!detection.metadata.name.contains("Obelisk")) {
                     telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
-                            detection.robotPose.getPosition().x * 2.54 + shift[0],
-                            detection.robotPose.getPosition().y * 2.54 + shift[1],
-                            detection.robotPose.getPosition().z * 2.54 + shift[2]));
+                            detection.ftcPose.x,    //* 2.54 + shift[0],
+                            detection.ftcPose.y,    //* 2.54 + shift[1],
+                            detection.ftcPose.z));  //* 2.54 + shift[2]));
                     telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
                             detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
                             detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
@@ -100,8 +98,7 @@ public class Camera {
         telemetry.update();
     }
     public double[] get_position(){
-        double x = 0, y = 0, z = 0;
-        double p = 0, r = 0, yaw = 0;
+        double x = 0, z = 0, ang = 0;
         double id = 0;
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         telemetry.addData("# AprilTags Detected", currentDetections.size());
@@ -109,20 +106,14 @@ public class Camera {
             if (detection.metadata != null) {
                 // Only use tags that don't have Obelisk in them
                 if (!detection.metadata.name.contains("Obelisk")) {
-                    x = detection.robotPose.getPosition().x * 2.54 + shift[0];
-                    y = detection.robotPose.getPosition().y * 2.54 + shift[1];
-                    z = detection.robotPose.getPosition().z * 2.54 + shift[2];
-                    p = detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES);
-                    r = detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES);
-                    yaw = detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES);
+                    x = detection.ftcPose.x * 2.54;
+                    z = detection.ftcPose.z * 2.54;
+                    ang = Math.atan2(x, z);
                     id = detection.id;
-                } else {
-                    id = detection.id;
-                }
+                } else id = detection.id;
             }
         }
-        double[] pos = new double[]{currentDetections.size(), x, y, z, p, r, yaw, id};
-        return pos;
+        return new double[]{currentDetections.size(), x, z, ang, id};
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              LinearOpMode L){

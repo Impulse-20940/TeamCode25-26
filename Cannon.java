@@ -24,6 +24,7 @@ public class Cannon {
     public DcMotorEx fw;
     public DcMotor bw;
     public Servo srv1;
+    public double shoot_time;
     public boolean shoot, get_third, vibro;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
@@ -40,63 +41,76 @@ public class Cannon {
     }
     public void fw_control(double power, double min_speed) {
         fw.setPower(-power);
+        boolean bmp_lt = gamepad2.left_bumper;
         boolean bmp_rt = gamepad2.right_bumper;
-        telemetry.addData("Velocity: ", get_shooter_vel());
         if(get_shooter_vel() > min_speed){
-            gamepad2.rumble(100);
+            gamepad2.rumble(200);
             vibro = false;
-        } else vibro = true;
-        if (bmp_rt) {
-            if(!shoot){
+        }
+        if (bmp_lt) {
+            if (!shoot) {
                 ExecutorService executor = Executors.newCachedThreadPool();
                 executor.execute(() -> {
-                    for(int i = 0; i < 3; i += 1) {
-                        if(get_third){
+                    for (int i = 0; i < 3; i += 1) {
+                        if (get_third) {
                             runtime.reset();
-                            while(runtime.milliseconds() < 235) bw.setPower(1);
+                            while (runtime.milliseconds() < 195) bw.setPower(1);
                             bw.setPower(-1);
                             runtime.reset();
-                            while(runtime.milliseconds() < 1000) bw.setPower(-1);
+                            while (runtime.milliseconds() < 1000) bw.setPower(-1);
                             get_third = false;
-                        }else bw_control(1);
+                        } ;
 
                         srv1_control(0);
                         runtime.reset();
-                        while(runtime.milliseconds() < 1000);
+                        while (runtime.milliseconds() < 700) ;
                         srv1_control(80);
                         runtime.reset();
-                        while(runtime.milliseconds() < 1000);
-                        if(i == 1) get_third = true;
+                        while (runtime.milliseconds() < 50) bw.setPower(-1);
+                        runtime.reset();
+                        while (runtime.milliseconds() < 1000) ;
+                        if (i == 1) get_third = true;
                     }
-                    shoot = true;
                 });
+                shoot = true;
+                bw.setPower(0);
                 fw.setPower(0);
-                telemetry.update();
+            }
+        } else if(bmp_rt){
+            if(!shoot){
+                srv1_control(0);
+                shoot_time = runtime.milliseconds();
+                shoot = true;
+            }
+            if(runtime.milliseconds()-shoot_time > 1000){
+                srv1_control(80);
             }
         } else {
             srv1_control(80);
             shoot = false;
+            vibro = true;
         }
     }
     public void fw_control_np(double power) {
         fw.setPower(-power);
-        for(int i = 0; i < 3; i += 1) {
-            if(get_third){
+        for (int i = 0; i < 3; i += 1) {
+            if (get_third) {
                 runtime.reset();
-                while(runtime.milliseconds() < 235) bw.setPower(1);
+                while (runtime.milliseconds() < 160) bw.setPower(1);
                 bw.setPower(-1);
                 runtime.reset();
-                while(runtime.milliseconds() < 1000) bw.setPower(-1);
+                while (runtime.milliseconds() < 1000) bw.setPower(-1);
                 get_third = false;
-            }else bw_control(1);
+            } ;
 
             srv1_control(0);
             runtime.reset();
-            while(runtime.milliseconds() < 1000);
+            while (runtime.milliseconds() < 700) ;
             srv1_control(80);
             runtime.reset();
-            while(runtime.milliseconds() < 1000);
-            if(i == 1) get_third = true;
+            while (runtime.milliseconds() < 1000) ;
+            while (runtime.milliseconds() < 20) bw.setPower(-1);
+            if (i == 1) get_third = true;
         }
         fw.setPower(0);
     }

@@ -19,9 +19,10 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="test_TeleOp")
 public class test extends LinearOpMode {
-    MultipleTelemetry telemetry = new MultipleTelemetry();
-    double angle;
-    double angle_m;
+    Telemetry telemetry = FtcDashboard.getInstance().getTelemetry();
+    boolean st = false, flag;
+    double axial, lateral, yaw, min_speed = 1850;
+    public static double kp;
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -30,40 +31,57 @@ public class test extends LinearOpMode {
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
         r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, cannon, cam, wheel, this);
+                gamepad2, imu, null, cam, wheel, this);
 
         cam.set_processor();
         wheel.telemetry_ports();
-        wheel.reset_encoders();
-        double cnt = 0;
-        waitForStart();
-        while (opModeIsActive()) {
-            double[] pos = cam.get_position();
-            if(pos[6] != 0 && cnt < 10){
-                angle_m += pos[6];
-                cnt += 1;
-            } else if (cnt == 10){
-                cnt = 0;
-                angle = angle_m / 10;
-                angle_m = 0;
-            }
-            telemetry.addData("Now is ", -45 + angle);
-            telemetry.addData("Position is ", wheel.get_enc_pos());
-            telemetry.addData("Position_left is ", wheel.get_enc_pos_res());
-            telemetry.update();
-            if(angle > 0){
-                double yaw = (-45+angle) * 0.01;
-                //Вычисление мощности
-                double lfp = (+yaw);
-                double rfp = (-yaw);
-                double lbp = (+yaw);
-                double rbp = (-yaw);
 
-                wheel.setMPower(rbp, rfp, lfp, lbp);
-            }
+        waitForStart();
+        while (opModeIsActive()){
+            double[] pos = cam.get_position(); 
+            telemetry.addData("XYZ: ", "%4f, %4f, %4f", pos[1],
+                                                                pos[2], pos[3]);
+
+            double x =  gamepad1.left_stick_x * (1 - gamepad1.right_trigger);
+            double y = -gamepad1.left_stick_y * (1 - gamepad1.right_trigger);
+
+            double deg = imu.getTurnAngle();
+            double l_alpha = 90 + deg;
+            double a_alpha = 90 - deg;
+
+            double a_rads = Math.toRadians(a_alpha);
+            double l_rads = Math.toRadians(l_alpha);
+
+            axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
+            lateral = x * Math.sin(l_rads) + y * Math.cos(a_rads);
+
+            boolean btn_a = gamepad1.a;
+            if(btn_a){
+                if(flag) imu.calibrate_imu();
+                flag = false;
+            } else flag = true;
+
+            boolean btn_s = gamepad1.square;
+            if(btn_s){
+                if(flag){
+                    st = !st;
+                    flag = false;
+                };
+            } else flag = true;
+
+            yaw = cam.get_position()[1] * kp; 
+
+            telemetry.addData("Stable enabled: ", st);
+            double lfp = axial + lateral + yaw;
+            double rfp = axial - lateral - yaw;
+            double lbp = axial - lateral + yaw;
+            double rbp = axial + lateral - yaw;
+
+            wheel.setMPower(rbp, rfp, lfp, lbp);
+            wheel.setZPB();
+            telemetry.update();
         }
         cam.stop_stream();
-
     }
 
 }
