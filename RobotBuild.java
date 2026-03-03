@@ -204,7 +204,7 @@ public class RobotBuild extends Robot {
 
             wb.setMPower(rbp, rfp, lfp, lbp);
 
-            telemetry.addData("Now is (tics):", "%4f, %4f", Math.abs(wb.get_enc_pos()),
+            telemetry.addData("Now is (tics), needs:", "%4f, %4f", Math.abs(wb.get_enc_pos()),
                                                                                                     s);
             telemetry.addData("Angle is", "%4f, needs %4f",
                                                             Imu.getTurnAngle(), angle);

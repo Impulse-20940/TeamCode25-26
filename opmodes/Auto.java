@@ -34,8 +34,7 @@ public class Auto extends LinearOpMode {
         cam.set_processor();
         //********************************************** s0
         //______________________________________________ m1
-        r.move_xy(0, 0, 0, -60, 10, 0.001, 0.02);                //s0m1a1
-        r.stable(0,0, 15, 1000, 0.02);
+        r.move_xy(0, 0, 0, -60, 0, 0.001, 0.02);                //s0m1a1
 
 //        while(cannon.get_shooter_vel() < 1700) cannon.fw.setPower(1);;
 //        cannon.fw_control_np(-0.92);
@@ -77,14 +76,14 @@ public class Auto extends LinearOpMode {
             //__________________________________________ m1
             r.stable(0, 0, -45, 2000, 0.0105);                        //s1m1a1
             //r.delay(200);
-            r.move_xy(0, 70, 0, 17, 45, 0.001, 0.02);         //s1m1a2
+            r.move_xy(0, 70, 0, 17, -45, 0.001, 0.02);         //s1m1a2
             cannon.bw_control(1);
             r.delay(200);
-            r.move_xy(0, 0, 0, 40, 45, 0.001, 0.02);           //s1m1a3
+            r.move_xy(0, 0, 0, 40, -45, 0.001, 0.02);           //s1m1a3
             cannon.bw_control(0);
 
             //__________________________________________ m2
-            r.move_xy(0, -80, 0, -70, 45, 0.001, 0.02);        //s1m2a2
+            r.move_xy(0, -80, 0, -70, -45, 0.001, 0.02);        //s1m2a2
             r.turn(5, 0.02, 1200);                                         //s1m2a3
             //r.delay(200);
 

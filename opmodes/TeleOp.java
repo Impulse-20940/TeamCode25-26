@@ -17,9 +17,11 @@ import java.lang.Math;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
-    boolean st45_lt, st45_rt, flag;
+    boolean st, flag;
     double axial, lateral, yaw, min_speed = 1600;
-    MultipleTelemetry telemetry = new MultipleTelemetry();
+    Telemetry dash_tel = FtcDashboard.getInstance().getTelemetry();
+    MultipleTelemetry multiple_tel = new MultipleTelemetry(telemetry, dash_tel);
+
     @Override
     public void runOpMode() throws InterruptedException {
         RobotBuild r = new RobotBuild();
@@ -50,24 +52,6 @@ public class TeleOp extends LinearOpMode {
             axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
             lateral = x * Math.sin(l_rads) + y * Math.cos(a_rads);
 
-            boolean btn_b = gamepad1.b;
-            if(btn_b){
-                if(flag){
-                    st45_rt = !st45_rt;
-                    st45_lt = false;
-                }
-                flag = false;
-            } else flag = true;
-
-            boolean btn_x = gamepad1.x;
-            if(btn_x){
-                if(flag){
-                    st45_lt = !st45_lt;
-                    st45_rt = false;
-                }
-                flag = false;
-            } else flag = true;
-
             boolean btn_a = gamepad1.a;
             if(btn_a){
                 if(flag) imu.calibrate_imu();
@@ -75,16 +59,14 @@ public class TeleOp extends LinearOpMode {
             } else flag = true;
 
             // Проверка стабизизации
-            if(st45_lt){
-                yaw = imu.get_st_err(45, 0.01);
-            } else if (st45_rt){
-                yaw = imu.get_st_err(-45, 0.01);
+            if(gamepad1.right_bumper){
+                yaw = cam.get_tag_err(0.0056);
             }else { //without head
                 yaw = gamepad1.right_stick_x;
 
-                telemetry.addData("Axial is", axial);
-                telemetry.addData("Lateral is", lateral);
-                telemetry.addData("Yaw is", yaw);
+                multiple_tel.addData("Axial is", axial);
+                multiple_tel.addData("Lateral is", lateral);
+                multiple_tel.addData("Yaw is", yaw);
                 //telemetry.addData("Shooter velocity", cannon.get_shooter_vel());
             }
             double lfp = axial + lateral + yaw;
@@ -97,7 +79,8 @@ public class TeleOp extends LinearOpMode {
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
-            telemetry.update();
+            multiple_tel.addData("Camera stabilization", st);
+            multiple_tel.update();
             //wheel.telemetry_power();
         }
         cam.stop_stream();

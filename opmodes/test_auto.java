@@ -17,7 +17,8 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 public class test_auto extends LinearOpMode {
     public static double kp;
     public static double kt;
-    MultipleTelemetry telemetry = new MultipleTelemetry();
+    MultipleTelemetry multiple_telemetry = new MultipleTelemetry(telemetry,
+                    FtcDashboard.getInstance().getTelemetry());
     @Override
     public void runOpMode() {
         RobotBuild r = new RobotBuild();
@@ -25,13 +26,15 @@ public class test_auto extends LinearOpMode {
         Wheelbase wheel = new Wheelbase();
         Camera cam = new Camera();
         Cannon cannon = new Cannon();
-        r.init(hardwareMap, telemetry, gamepad1,
+        r.init(hardwareMap, multiple_telemetry, gamepad1,
                 gamepad2, imu, null, cam, wheel, this);
         wheel.telemetry_ports();
         cam.set_processor();
         waitForStart();
         //R.move_xy(0, -30, 0, 30, 0, kp, 0.006);
-        r.move_xy(0, 0, 0, 40, 0, kp, kt);
+        r.move_xy(0, -80, 0, -70, 0, kp, kt);
+        r.delay(3000);
+        r.move_xy(0, 80, 0, -70, 0, kp, kt);
         cam.stop_stream();
     }
 }

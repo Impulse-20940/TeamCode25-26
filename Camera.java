@@ -115,6 +115,10 @@ public class Camera {
         }
         return new double[]{currentDetections.size(), x, z, ang, id};
     }
+    public double get_tag_err(double kp){
+        double[] pos = get_position();
+        return pos[1] * kp;
+    }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              LinearOpMode L){
         this.hardwareMap = hardwareMap;
