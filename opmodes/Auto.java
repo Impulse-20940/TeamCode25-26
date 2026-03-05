@@ -75,7 +75,6 @@ public class Auto extends LinearOpMode {
         }else if (r.alliance == 24){
             //__________________________________________ m1
             r.stable(0, 0, -45, 2000, 0.0105);                        //s1m1a1
-            //r.delay(200);
             r.move_xy(0, 70, 0, 17, -45, 0.001, 0.02);         //s1m1a2
             cannon.bw_control(1);
             r.delay(200);
