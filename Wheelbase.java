@@ -39,9 +39,9 @@ public class Wheelbase {
     }
     public void reset_encoders(){
         rf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lb.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lf.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lb.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lf.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     public void setMPower(double RB, double RF, double LF, double LB){
         rf.setPower(RF);
@@ -59,7 +59,7 @@ public class Wheelbase {
         return rf.getCurrentPosition();
     }
     public double get_enc_pos_res(){
-        return lb.getCurrentPosition();
+        return lf.getCurrentPosition();
     }
     public void telemetry_ports(){
         telemetry.addData("RF is in", rf.getPortNumber());
