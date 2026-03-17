@@ -58,9 +58,7 @@ public class Wheelbase {
     public double get_enc_pos(){
         return rf.getCurrentPosition();
     }
-    public double get_enc_pos_res(){
-        return lf.getCurrentPosition();
-    }
+    public double get_enc_pos_res(){ return lf.getCurrentPosition();}
     public void telemetry_ports(){
         telemetry.addData("RF is in", rf.getPortNumber());
         telemetry.addData("RB is in", rb.getPortNumber());

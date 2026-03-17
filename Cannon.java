@@ -64,7 +64,7 @@ public class Cannon {
                         srv1_control(0);
                         runtime.reset();
                         while (runtime.milliseconds() < 700) ;
-                        srv1_control(80);
+                        srv1_control(8);
                         runtime.reset();
                         while (runtime.milliseconds() < 50) bw.setPower(-1);
                         runtime.reset();
@@ -101,7 +101,7 @@ public class Cannon {
                 runtime.reset();
                 while (runtime.milliseconds() < 1000) bw.setPower(-1);
                 get_third = false;
-            } ;
+            }
 
             srv1_control(0);
             runtime.reset();
@@ -113,6 +113,37 @@ public class Cannon {
             if (i == 1) get_third = true;
         }
         fw.setPower(0);
+    }
+    public void ShooterPID(double speed, double delta, double kP, double kI, double kD,
+                                                                            boolean stop_flag){
+        ExecutorService executor = Executors.newCachedThreadPool();
+        executor.execute(() -> {
+            double dt= 0;
+            double last = runtime.milliseconds();
+            double I = 0;
+            double oldEr = 0;
+            while(stop_flag){
+                while (-get_shooter_vel() < speed-delta || -get_shooter_vel() > speed+delta){
+                    double er = -get_shooter_vel()-speed;
+                    double P = er;
+                    dt = runtime.milliseconds()-last;
+                    last = runtime.milliseconds();
+                    if (get_shooter_vel() == 0) I = 0;
+                    else I += er*dt;
+                    double D = (er - oldEr)/dt;
+                    fw.setPower(-(P*kP + I*kI + D*kD));
+                    oldEr = er;
+                    telemetry.addData("speed",-get_shooter_vel());
+                    telemetry.addData("power", speed);
+                    telemetry.update();
+                    try{
+                        Thread.sleep(10);
+                    } catch (InterruptedException ex){
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        });
     }
     public void bw_control(double power){
         bw.setPower(-power);

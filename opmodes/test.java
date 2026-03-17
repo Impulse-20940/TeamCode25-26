@@ -31,16 +31,19 @@ public class test extends LinearOpMode {
         Cannon cannon = new Cannon();
         Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
-        r.init(hardwareMap, telemetry, gamepad1,
-                gamepad2, imu, null, cam, wheel, this);
+        r.init(hardwareMap, multiple, gamepad1,
+                gamepad2, imu, cannon, cam, null, this);
 
         cam.set_processor();
         wheel.telemetry_ports();
         wheel.reset_encoders();
         waitForStart();
         while (opModeIsActive()){
+            cannon.srv1_control(0);
+            r.delay(1000);
+            cannon.srv1_control(80);
+            r.delay(1000);
             multiple.addData("Left encoder is in", wheel.get_enc_pos_res());
-            multiple.addData("Right encoder is in", wheel.get_enc_pos());
             multiple.update();
         }
         cam.stop_stream();

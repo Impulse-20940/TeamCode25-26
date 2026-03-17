@@ -27,14 +27,9 @@ public class test_auto extends LinearOpMode {
         Camera cam = new Camera();
         Cannon cannon = new Cannon();
         r.init(hardwareMap, multiple_telemetry, gamepad1,
-                gamepad2, imu, null, cam, wheel, this);
-        wheel.telemetry_ports();
-        cam.set_processor();
-        waitForStart();
-        //R.move_xy(0, -30, 0, 30, 0, kp, 0.006);
-        r.move_xy(0, -80, 0, -70, 0, kp, kt);
-        r.delay(3000);
-        r.move_xy(0, 80, 0, -70, 0, kp, kt);
-        cam.stop_stream();
+                gamepad2, imu, cannon, null, null, this);
+        while(opModeIsActive()){
+            cannon.ShooterPID(1600, 200, 1, 1, 1, opModeIsActive());
+        }
     }
 }

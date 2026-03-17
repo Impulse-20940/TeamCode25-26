@@ -59,7 +59,7 @@ public class TeleOp extends LinearOpMode {
             } else flag = true;
 
             // Проверка стабизизации
-            if(gamepad1.right_bumper){
+            if(gamepad1.right_trigger > 0.3){
                 yaw = cam.get_tag_err(0.0058);
             }else { //without head
                 yaw = gamepad1.right_stick_x;
