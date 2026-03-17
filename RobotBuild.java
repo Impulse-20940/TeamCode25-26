@@ -105,9 +105,8 @@ public class RobotBuild extends Robot {
         double yaw;
         runtime.reset();
         while (L.opModeIsActive() && runtime.milliseconds() < time) {
-            double[] detect = cam.get_position();
             //Вычисление угла стабилизации
-            yaw = -(45 - detect[6]) * kt;
+            yaw = cam.get_tag_err(0.0057);
             //Вычисление мощности
             double lfp = (+yaw);
             double rfp = (-yaw);
