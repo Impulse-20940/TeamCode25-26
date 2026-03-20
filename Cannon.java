@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -40,7 +41,7 @@ public class Cannon {
         this.fw = hardwareMap.get(DcMotorEx.class, "c1");
         this.bw = hardwareMap.get(DcMotor.class, "c2");
         this.srv1 = hardwareMap.get(Servo.class, "shoot");
-        //fw.setDirection(DcMotorSimple.Direction.REVERSE);
+        fw.setDirection(DcMotorEx.Direction.REVERSE);
     }
     public void fw_control(double min_speed) {
         shooting_process.execute(() -> {
