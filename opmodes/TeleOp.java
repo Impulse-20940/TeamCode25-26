@@ -81,7 +81,7 @@ public class TeleOp extends LinearOpMode {
                         ((2000 - cannon.get_shooter_vel()) * 0.09), 1800);
             } else cannon.shooter_control(0, 2000);
              */
-            cannon.ShooterPID_sync(gamepad2.left_stick_y, 2000, 0.07, 0, 0);
+            cannon.ShooterPID_sync(gamepad2.left_stick_y, 2000, 0.38, 0.00001, 0.075);
             cannon.bw_control(gamepad2.right_stick_y);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);

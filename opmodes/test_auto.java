@@ -15,10 +15,10 @@ import org.firstinspires.ftc.teamcode.Wheelbase;
 @Config
 @Autonomous(name="test_Autonomous")
 public class test_auto extends LinearOpMode {
-    public static double kp;
-    public static double ki;
-    public static double kd;
-    public static double kt;
+    public static double speed;
+    public static double kp = 0.1;
+    public static double ki = 0.05;
+    public static double kd = 0.05;
     MultipleTelemetry multiple_telemetry = new MultipleTelemetry(telemetry,
                     FtcDashboard.getInstance().getTelemetry());
     @Override
@@ -30,8 +30,9 @@ public class test_auto extends LinearOpMode {
         Cannon cannon = new Cannon();
         r.init(hardwareMap, multiple_telemetry, gamepad1,
                 gamepad2, imu, cannon, null, null, this);
+        waitForStart();
         while(opModeIsActive()){
-            cannon.ShooterPID_sync(1, 1600, kp, ki, kd);
+            cannon.ShooterPID_sync(1, speed, kp, ki, kd);
         }
     }
 }
