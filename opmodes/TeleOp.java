@@ -4,8 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Camera;
@@ -17,7 +15,7 @@ import java.lang.Math;
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Main_TeleOp")
 public class TeleOp extends LinearOpMode {
-    boolean st, flag;
+    boolean flag;
     double axial, lateral, yaw, min_speed = 1600;
     Telemetry dash_tel = FtcDashboard.getInstance().getTelemetry();
     MultipleTelemetry multiple_tel = new MultipleTelemetry(telemetry, dash_tel);
@@ -34,9 +32,11 @@ public class TeleOp extends LinearOpMode {
 
         wheel.telemetry_ports();
         cam.set_processor();
-        cannon.srv1_control(80);
+        cannon.srv1_control(0.9);
 
         waitForStart();
+        //cannon.ShooterPID(2000, 200, 0.01, 0, 0, opModeIsActive());
+        cannon.fw_control(2000);
         while(opModeIsActive()){
             cam.telemetryAprilTag();
             double x =  gamepad1.left_stick_x * (1 - gamepad1.right_trigger);
@@ -59,7 +59,7 @@ public class TeleOp extends LinearOpMode {
             } else flag = true;
 
             // Проверка стабизизации
-            if(gamepad1.right_trigger > 0.3){
+            if(gamepad1.right_bumper){
                 yaw = cam.get_tag_err(0.0058);
             }else { //without head
                 yaw = gamepad1.right_stick_x;
@@ -74,15 +74,26 @@ public class TeleOp extends LinearOpMode {
             double lbp = axial - lateral + yaw;
             double rbp = axial + lateral - yaw;
 
-            cannon.fw_control(gamepad2.left_stick_y, min_speed);
+            cannon.shoot_value = gamepad2.right_bumper;
+            /*
+            if(cannon.get_shooter_vel() <= 2000){
+                cannon.shooter_control(gamepad2.left_stick_y *
+                        ((2000 - cannon.get_shooter_vel()) * 0.09), 1800);
+            } else cannon.shooter_control(0, 2000);
+             */
+            cannon.ShooterPID_sync(gamepad2.left_stick_y, 2000, 0.07, 0, 0);
             cannon.bw_control(gamepad2.right_stick_y);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
-            multiple_tel.addData("Camera stabilization", st);
+            multiple_tel.addData("Camera stabilization", gamepad1.right_bumper);
+            multiple_tel.addData("Camera error", cam.get_tag_err(0.0058));
+            multiple_tel.addData("Shooter speed", cannon.get_shooter_vel());
             multiple_tel.update();
             //wheel.telemetry_power();
         }
+        //cannon.stop_shooter_thread();
+        cannon.stop_shooting_process();
         cam.stop_stream();
     }
 }
