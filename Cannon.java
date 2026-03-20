@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -72,7 +71,7 @@ public class Cannon {
         double err = speed - get_shooter_vel();
         double now = runtime.milliseconds();
 
-        double dt = (now - old_t) / 1000.0;
+        double dt = (now - old_t);
         integral += get_shooter_vel() == 0 ? 0 : err * dt;
 
         double differential = (err - err_last) / dt;
@@ -85,6 +84,15 @@ public class Cannon {
 
         err_last = err;
         old_t = now;
+        telemetry.addData("real speed",get_shooter_vel());
+        telemetry.addData("speed",speed);
+        telemetry.addData("err", err);
+        telemetry.update();
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
     public void stop_shooter_thread(){
         shooter_thread.shutdown();

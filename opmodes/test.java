@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes;
-import android.opengl.Matrix;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Camera;
@@ -14,39 +13,29 @@ import org.firstinspires.ftc.teamcode.Cannon;
 import org.firstinspires.ftc.teamcode.IMU;
 import org.firstinspires.ftc.teamcode.RobotBuild;
 import org.firstinspires.ftc.teamcode.Wheelbase;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 @Config
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="test_TeleOp")
+@TeleOp(name="test")
 public class test extends LinearOpMode {
-    MultipleTelemetry multiple = new MultipleTelemetry(telemetry,
-                        FtcDashboard.getInstance().getTelemetry());
-    boolean st = false, flag;
-    double axial, lateral, yaw, min_speed = 1850;
-    public static double kp;
+    public static double kd = 0.075;
+    public static double ki = 0.00001;
+    public static double kp = 0.4;
+    public static double speed = 600;
+
+    MultipleTelemetry multiple_telemetry = new MultipleTelemetry(telemetry,
+            FtcDashboard.getInstance().getTelemetry());
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         RobotBuild r = new RobotBuild();
         IMU imu = new IMU();
-        Cannon cannon = new Cannon();
-        Camera cam = new Camera();
         Wheelbase wheel = new Wheelbase();
-        r.init(hardwareMap, multiple, gamepad1,
-                gamepad2, imu, cannon, cam, null, this);
-
-        cam.set_processor();
-        wheel.telemetry_ports();
-        wheel.reset_encoders();
+        Camera cam = new Camera();
+        Cannon cannon = new Cannon();
+        r.init(hardwareMap, multiple_telemetry, gamepad1,
+                gamepad2, null, cannon, null, null, this);
         waitForStart();
-        while (opModeIsActive()){
-            cannon.srv1_control(0);
-            r.delay(1000);
-            cannon.srv1_control(80);
-            r.delay(1000);
-            multiple.addData("Left encoder is in", wheel.get_enc_pos_res());
-            multiple.update();
+        while(opModeIsActive()){
+            while (gamepad2.x) speed = gamepad2.left_stick_y*2200;
+            cannon.ShooterPID_sync(1, speed, kp, ki, kd);
         }
-        cam.stop_stream();
     }
-
 }
