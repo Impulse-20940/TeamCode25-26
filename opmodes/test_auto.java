@@ -18,6 +18,7 @@ public class test_auto extends LinearOpMode {
     public static double kp;
     public static double ki;
     public static double kd;
+    public static double kt;
     MultipleTelemetry multiple_telemetry = new MultipleTelemetry(telemetry,
                     FtcDashboard.getInstance().getTelemetry());
     @Override
@@ -29,10 +30,8 @@ public class test_auto extends LinearOpMode {
         Cannon cannon = new Cannon();
         r.init(hardwareMap, multiple_telemetry, gamepad1,
                 gamepad2, imu, cannon, null, null, this);
-
-        waitForStart();
         while(opModeIsActive()){
-            cannon.ShooterPID_sync(1, 2000, kp, ki, kd);
+            cannon.ShooterPID_sync(1, 1600, kp, ki, kd);
         }
     }
 }
