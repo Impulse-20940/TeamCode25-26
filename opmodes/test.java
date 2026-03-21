@@ -34,7 +34,6 @@ public class test extends LinearOpMode {
                 gamepad2, null, cannon, null, null, this);
         waitForStart();
         while(opModeIsActive()){
-            while (gamepad2.x) speed = gamepad2.left_stick_y*2200;
             cannon.ShooterPID_sync(1, speed, kp, ki, kd);
         }
     }

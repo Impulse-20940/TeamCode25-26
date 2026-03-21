@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -22,11 +23,14 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 public class Camera {
+    ElapsedTime runtime = new ElapsedTime();
     HardwareMap hardwareMap;
     Telemetry telemetry;
     Gamepad gamepad1;
     Gamepad gamepad2;
     LinearOpMode L;
+    double old_t = runtime.milliseconds();
+    double err_last = 0, integral = 0, D;
     public static final boolean USE_WEBCAM = true;
     private final Position cameraPosition = new Position(DistanceUnit.INCH,
             -5, 0, 0, 0);
@@ -115,9 +119,23 @@ public class Camera {
         }
         return new double[]{currentDetections.size(), x, z, ang, id};
     }
-    public double get_tag_err(double kp){
+    public double get_tag_err(double kp, double kd){
         double[] pos = get_position();
-        return pos[1] * kp;
+
+        double err = pos[1];
+        double now = runtime.milliseconds();
+
+        double dt = (now - old_t);
+
+        double differential = (err - err_last) / dt;
+
+        double P = err * kp;
+        double D = differential * kd;
+
+        err_last = err;
+        old_t = now;
+
+        return P + D;
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              LinearOpMode L){

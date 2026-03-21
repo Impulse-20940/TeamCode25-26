@@ -60,7 +60,7 @@ public class TeleOp extends LinearOpMode {
 
             // Проверка стабизизации
             if(gamepad1.right_bumper){
-                yaw = cam.get_tag_err(0.0058);
+                yaw = cam.get_tag_err(0.0058, 0.0001);
             }else { //without head
                 yaw = gamepad1.right_stick_x;
 
@@ -87,7 +87,7 @@ public class TeleOp extends LinearOpMode {
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
             multiple_tel.addData("Camera stabilization", gamepad1.right_bumper);
-            multiple_tel.addData("Camera error", cam.get_tag_err(0.0058));
+            multiple_tel.addData("Camera error", cam.get_tag_err(0.0058, 0.0001));
             multiple_tel.addData("Shooter speed", cannon.get_shooter_vel());
             multiple_tel.update();
             //wheel.telemetry_power();
