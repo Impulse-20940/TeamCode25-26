@@ -30,7 +30,7 @@ public class Auto extends LinearOpMode {
         Wheelbase wheel = new Wheelbase();
         Cannon cannon = new Cannon();
         IMU imu = new IMU();
-        r.init(hardwareMap, telemetry, gamepad1,
+        r.init(hardwareMap, multi_telemetry, gamepad1,
                 gamepad2, imu, cannon, cam, wheel, this);
 
         wheel.reset_encoders();
