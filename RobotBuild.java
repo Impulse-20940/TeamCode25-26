@@ -101,7 +101,7 @@ public class RobotBuild extends Robot {
         }
         wb.setZPB();
     }
-    public void stable_camera(double kt, double time) {//Функция поворота
+    public void stable_camera(double time) {//Функция поворота
         double yaw;
         runtime.reset();
         while (L.opModeIsActive() && runtime.milliseconds() < time) {
@@ -118,6 +118,8 @@ public class RobotBuild extends Robot {
             telemetry.addData("Now is (degrees):", "%4f", grd_tel);
             telemetry.update();
         }
+        wb.setMPower(0, 0, 0, 0);
+        wb.setZPB();
     }
     public void turn_simple(double grd, double angle, double kt, double time) {//Функция поворота
         double yaw;
@@ -164,11 +166,8 @@ public class RobotBuild extends Robot {
         stable(0, 0, ang, 1000, 0.012);
     }
 
-
-
-
     public void move_xy(double x, double x1, double y, double y1, double angle,
-                                                        double kp, double kt){
+                                                        double kp, double ki, double kd, double kt){
         wb.reset_encoders();
         double tic_per_cm  = 30.458/480;
         x1                  /= tic_per_cm;
@@ -181,6 +180,8 @@ public class RobotBuild extends Robot {
 
         double s = Math.sqrt(Math.pow(sx, 2) + Math.pow(sy, 2));
 
+        double old_t = runtime.milliseconds(), integral = 0, err_last = 0;
+
         while((Math.abs(wb.get_enc_pos()) < s && Math.abs(wb.get_enc_pos_res()) < s) && L.opModeIsActive()) {
             double[] detect = cam.get_position();
             telemetry.addData("Detected id: ", detect[4]);
@@ -190,9 +191,18 @@ public class RobotBuild extends Robot {
             double enc_value = Math.max(Math.abs(wb.get_enc_pos()),
                                         Math.abs(wb.get_enc_pos_res()));
             double error = s - enc_value;
-            double p = error * kp;
+            double now = runtime.milliseconds();
 
-            double axial    = sy/s * p;
+            double dt = (now - old_t);
+            integral += error == 0 ? 0 : error * dt;
+
+            double differential = (error - err_last) / dt;
+
+            double p = error * kp;
+            double i = integral * ki;
+            double d = differential * kd;
+
+            double axial    = sy/s * (p + i + d);
             double lateral  = sx/s * p;
             double yaw      = Imu.get_st_err(angle, kt);
 
@@ -211,6 +221,9 @@ public class RobotBuild extends Robot {
                                                 Imu.get_st_err(angle, kt));
             telemetry.addData("ALY: ", "%4f, %4f, %4f", axial, lateral, yaw);
             telemetry.update();
+
+            err_last = error;
+            old_t = now;
         }
         stable(0, 0, angle, 200, 0.009);
         wb.setMPower(0, 0, 0, 0);

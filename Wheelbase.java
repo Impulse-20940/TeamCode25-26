@@ -30,8 +30,8 @@ public class Wheelbase {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.L = L;
-        rb = hardwareMap.get(DcMotor.class, "rf");
-        rf = hardwareMap.get(DcMotor.class, "rb");
+        rb = hardwareMap.get(DcMotor.class, "rb");
+        rf = hardwareMap.get(DcMotor.class, "rf");
         lf = hardwareMap.get(DcMotor.class, "lf");
         lb = hardwareMap.get(DcMotor.class, "lb");
         lb.setDirection(DcMotorSimple.Direction.REVERSE);

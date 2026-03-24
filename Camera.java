@@ -33,7 +33,7 @@ public class Camera {
     double err_last = 0, integral = 0, D;
     public static final boolean USE_WEBCAM = true;
     private final Position cameraPosition = new Position(DistanceUnit.INCH,
-            -5, 0, 0, 0);
+            20, 0, 0, 0);
     private final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
             0, 20, 0, 0);
 
@@ -136,6 +136,13 @@ public class Camera {
         old_t = now;
 
         return P + D;
+    }
+    public double get_distance(){
+        double[] pos = get_position();
+
+        double err = pos[2];
+
+        return err;
     }
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              LinearOpMode L){

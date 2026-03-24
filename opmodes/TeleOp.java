@@ -32,7 +32,7 @@ public class TeleOp extends LinearOpMode {
 
         wheel.telemetry_ports();
         cam.set_processor();
-        cannon.srv1_control(0.9);
+        cannon.srv1_control(0.96);
 
         waitForStart();
         //cannon.ShooterPID(2000, 200, 0.01, 0, 0, opModeIsActive());
@@ -49,7 +49,6 @@ public class TeleOp extends LinearOpMode {
             double a_rads = Math.toRadians(a_alpha);
             double l_rads = Math.toRadians(l_alpha);
 
-            axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
             lateral = x * Math.sin(l_rads) + y * Math.cos(a_rads);
 
             boolean btn_a = gamepad1.a;
@@ -60,8 +59,10 @@ public class TeleOp extends LinearOpMode {
 
             // Проверка стабизизации
             if(gamepad1.right_bumper){
-                yaw = cam.get_tag_err(0.0058, 0.0001);
+                axial = -(cam.get_distance()-5) * 0.029;
+            yaw = cam.get_tag_err(0.006, 0.00025);
             }else { //without head
+                axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
                 yaw = gamepad1.right_stick_x;
 
                 multiple_tel.addData("Axial is", axial);
@@ -75,13 +76,7 @@ public class TeleOp extends LinearOpMode {
             double rbp = axial + lateral - yaw;
 
             cannon.shoot_value = gamepad2.right_bumper;
-            /*
-            if(cannon.get_shooter_vel() <= 2000){
-                cannon.shooter_control(gamepad2.left_stick_y *
-                        ((2000 - cannon.get_shooter_vel()) * 0.09), 1800);
-            } else cannon.shooter_control(0, 2000);
-             */
-            cannon.ShooterPID_sync(gamepad2.left_stick_y, 2000, 0.38, 0.00001, 0.075);
+            cannon.ShooterPID_sync(gamepad2.left_stick_y, 780, 0.4, 0.00001, 0.085);
             cannon.bw_control(gamepad2.right_stick_y);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
@@ -89,6 +84,7 @@ public class TeleOp extends LinearOpMode {
             multiple_tel.addData("Camera stabilization", gamepad1.right_bumper);
             multiple_tel.addData("Camera error", cam.get_tag_err(0.0058, 0.0001));
             multiple_tel.addData("Shooter speed", cannon.get_shooter_vel());
+            multiple_tel.addData("Distance: ", cam.get_distance()-5);
             multiple_tel.update();
             //wheel.telemetry_power();
         }

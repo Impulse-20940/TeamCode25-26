@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Cannon {
-    ExecutorService shooter_thread = Executors.newCachedThreadPool();
     ExecutorService shooting_process = Executors.newCachedThreadPool();
     ElapsedTime runtime = new ElapsedTime();
     HardwareMap hardwareMap;
@@ -28,7 +27,7 @@ public class Cannon {
     public Servo srv1;
     public boolean value = false, shoot_value = false, get_third, vibro;
     double old_t = runtime.milliseconds();
-    double err_last = 0, integral = 0, D;
+    double err_last = 0, integral = 0, P, I, D;
 
     public void init_classes(HardwareMap hardwareMap, Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2,
                              LinearOpMode L){
@@ -43,42 +42,111 @@ public class Cannon {
         fw.setDirection(DcMotorEx.Direction.REVERSE);
     }
     public void fw_control(double min_speed) {
+        ExecutorService shooter_process = Executors.newCachedThreadPool();
         shooting_process.execute(() -> {
             while(L.opModeIsActive()){
                 while(shoot_value) {
-                    srv1_control(0.48);
+                    runtime.reset();
+                    while(runtime.milliseconds() < 70) bw_control(-1);
+                    bw_control(0);
+                    srv1_control(0.5);
                     runtime.reset();
                     while(runtime.milliseconds() < 500);
-                    srv1_control(0.9);
-                    while(runtime.milliseconds() < 1000);
+                    srv1_control(0.96);
+                    runtime.reset();
+                    while(runtime.milliseconds() < 500) bw_control(1);
+                    bw_control(0);
                 }
-                srv1_control(0.9);
+                srv1_control(0.96);
             }
         });
     }
-    public void fw_control_np(double power) {
-        fw.setPower(-power);
+    public void fw_control_np(double power, double speed) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+        value = true;
+        ShooterPID_async(power, speed, 0.395, 0.00001, 0.0768, executor);
+        while(get_shooter_vel() <= speed - 60);
+        telemetry.addData("value", value);
+        telemetry.update();
         for (int i = 0; i < 3; i += 1) {
-            srv1_control(0.48);
+            runtime.reset();
+            while(runtime.milliseconds() < 70) bw_control(-1);
+            bw_control(0);
+            srv1_control(0.5);
             runtime.reset();
             while(runtime.milliseconds() < 500);
-            srv1_control(0.9);
-            while(runtime.milliseconds() < 1000);
+            srv1_control(0.96);
+            runtime.reset();
+            while(runtime.milliseconds() < 500) bw_control(1);
+            bw_control(0);
+            telemetry.addData("shooted", i);
+            telemetry.update();
+        }
+        value = false;
+        executor.shutdown();
+        try{
+            if(!executor.awaitTermination(1, TimeUnit.SECONDS)){
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e){
+            executor.shutdownNow();
         }
         fw.setPower(0);
+        telemetry.addData("value", value);
+        telemetry.update();
+    }
+    public void ShooterPID_async(double power, double speed, double kP, double kI, double kD,
+                                                                ExecutorService shooter_thread){
+        shooter_thread.execute(() -> {
+            while(value){
+                double err = speed - get_shooter_vel();
+                double now = runtime.milliseconds();
+
+                double dt = (now - old_t);
+                dt = Math.max(0.001, now - old_t);
+
+                if (Math.abs(P + I + D) < 1) {
+                    integral += err * dt;
+                }
+
+                double differential = (err - err_last) / dt;
+
+                P = err * kP;
+                I = integral * kI;
+                D = differential * kD;
+
+                shooter_control(power * (P + I + D), speed);
+
+                err_last = err;
+                old_t = now;
+                telemetry.addData("real speed",get_shooter_vel());
+                telemetry.addData("speed",speed);
+                telemetry.addData("err", err);
+                telemetry.update();
+                try {
+                    Thread.sleep(2);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
     public void ShooterPID_sync(double power, double speed, double kP, double kI, double kD){
         double err = speed - get_shooter_vel();
         double now = runtime.milliseconds();
 
         double dt = (now - old_t);
-        integral += get_shooter_vel() == 0 ? 0 : err * dt;
+        dt = Math.max(0.001, now - old_t);
+
+        if (Math.abs(P + I + D) < 1) {
+            integral += err * dt;
+        }
 
         double differential = (err - err_last) / dt;
 
-        double P = err * kP;
-        double I = integral * kI;
-        double D = differential * kD;
+        P = err * kP;
+        I = integral * kI;
+        D = differential * kD;
 
         shooter_control(power * (P + I + D), speed);
 
@@ -92,16 +160,6 @@ public class Cannon {
             Thread.sleep(2);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
-        }
-    }
-    public void stop_shooter_thread(){
-        shooter_thread.shutdown();
-        try{
-            if(!shooter_thread.awaitTermination(1, TimeUnit.SECONDS)){
-                shooter_thread.shutdownNow();
-            }
-        } catch (InterruptedException e){
-            shooter_thread.shutdownNow();
         }
     }
     public void stop_shooting_process(){
