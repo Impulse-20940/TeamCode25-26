@@ -33,7 +33,7 @@ public class Camera {
     double err_last = 0, integral = 0, D;
     public static final boolean USE_WEBCAM = true;
     private final Position cameraPosition = new Position(DistanceUnit.INCH,
-            20, 0, 0, 0);
+            15, 0, 0, 0);
     private final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
             0, 20, 0, 0);
 

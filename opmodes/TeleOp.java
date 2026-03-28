@@ -33,9 +33,7 @@ public class TeleOp extends LinearOpMode {
         wheel.telemetry_ports();
         cam.set_processor();
         cannon.srv1_control(0.96);
-
         waitForStart();
-        //cannon.ShooterPID(2000, 200, 0.01, 0, 0, opModeIsActive());
         cannon.fw_control(2000);
         while(opModeIsActive()){
             cam.telemetryAprilTag();
@@ -59,8 +57,8 @@ public class TeleOp extends LinearOpMode {
 
             // Проверка стабизизации
             if(gamepad1.right_bumper){
-                axial = -(cam.get_distance()-5) * 0.029;
-            yaw = cam.get_tag_err(0.006, 0.00025);
+                axial = -(cam.get_distance()-20) * 0.029;
+                yaw = cam.get_tag_err(0.006, 0.00025);
             }else { //without head
                 axial = x * Math.cos(l_rads) + y * Math.sin(a_rads);
                 yaw = gamepad1.right_stick_x;
@@ -76,19 +74,21 @@ public class TeleOp extends LinearOpMode {
             double rbp = axial + lateral - yaw;
 
             cannon.shoot_value = gamepad2.right_bumper;
-            cannon.ShooterPID_sync(gamepad2.left_stick_y, 780, 0.4, 0.00001, 0.085);
+            cannon.ShooterPID_sync(gamepad2.left_stick_y, 725, 0.4, 0.00001, 0.075);
             cannon.bw_control(gamepad2.right_stick_y);
 
             wheel.setMPower(rbp, rfp, lfp, lbp);
             wheel.setZPB();
+            multiple_tel.addData("s0",0);
+            multiple_tel.addData("starget speed",725);
+            multiple_tel.addData("s900",900);
             multiple_tel.addData("Camera stabilization", gamepad1.right_bumper);
             multiple_tel.addData("Camera error", cam.get_tag_err(0.0058, 0.0001));
             multiple_tel.addData("Shooter speed", cannon.get_shooter_vel());
-            multiple_tel.addData("Distance: ", cam.get_distance()-5);
+            multiple_tel.addData("Distance", cam.get_distance()-20);
             multiple_tel.update();
             //wheel.telemetry_power();
         }
-        //cannon.stop_shooter_thread();
         cannon.stop_shooting_process();
         cam.stop_stream();
     }

@@ -64,7 +64,7 @@ public class Cannon {
     public void fw_control_np(double power, double speed) {
         ExecutorService executor = Executors.newCachedThreadPool();
         value = true;
-        ShooterPID_async(power, speed, 0.395, 0.00001, 0.0768, executor);
+        ShooterPID_async(power, speed, 0.38, 0.00001, 0.08, executor);
         while(get_shooter_vel() <= speed - 60);
         telemetry.addData("value", value);
         telemetry.update();
@@ -132,7 +132,7 @@ public class Cannon {
         });
     }
     public void ShooterPID_sync(double power, double speed, double kP, double kI, double kD){
-        double err = speed - get_shooter_vel();
+        double err = speed-20 - get_shooter_vel();
         double now = runtime.milliseconds();
 
         double dt = (now - old_t);
@@ -148,7 +148,7 @@ public class Cannon {
         I = integral * kI;
         D = differential * kD;
 
-        shooter_control(power * (P + I + D), speed);
+        shooter_control(power * (P + I + D), speed-20);
 
         err_last = err;
         old_t = now;
@@ -156,11 +156,9 @@ public class Cannon {
         telemetry.addData("speed",speed);
         telemetry.addData("err", err);
         telemetry.update();
-        try {
-            Thread.sleep(2);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        double time_delay = runtime.milliseconds();
+        while(runtime.milliseconds() - time_delay < 2);
     }
     public void stop_shooting_process(){
         shooting_process.shutdown();
